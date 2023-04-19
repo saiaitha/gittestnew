@@ -1,0 +1,389 @@
+openapi: 3.0.3
+info:
+  title: "Person History API"
+  version: "1.0"
+  description: This is the Person History API
+
+servers:
+  - url: https://dev-api.mckinsey.com/
+
+externalDocs:
+  description: Find out more
+  url: https://apidocs.intranet.mckinsey.com
+
+tags:
+  - name: PersonHistoryV1
+    externalDocs:
+      url: 'https://dev-apiportal.mckinsey.com/apis'
+      description: Find out more
+
+paths:
+  /person-historical-restricted/v1/persons_history:
+    get:
+      tags:
+        - PersonHistoryV1
+      operationId: getPersonHistory
+      summary: The API returns Person's history
+      description: |-
+        <b>API Description:</b> This api will give a history of current partners and former partners as well as non partners.
+        This API can also additionally provide confidential information (purple data) about persons history.
+        If you would like access to this data please mention it your onboarding form and contact the ORE APM team
+        for the additional approval for the same.<br/>
+        <b>Business Logic/Filter on data:</b> The data can be fetched for partners or non partners based on the workerType.
+        For the specific set of fields, please use the fields parameter with an asterix or the specific field names.
+        All of the fields in the response are indexed and can be used to filter results<br/>
+        <b>Source overview:</b> APIx>Solr>FDW<br/>
+        <b>Hypermedia Links:</b> No<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Works with ''Try it Out''?:</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency:</b> Every 2 hours starting 01:30 AM EST <br/>
+        <b>Caching enabled and time to live:</b> None<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The total no of records displayed are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      parameters:
+      - name: q
+        in: query
+        description: |-
+          Use the ''q'' parameter to search for person''s history for a given fmno.<br/>
+          <b>-</b>For details for a record use q=fmno:00269<br/>
+          <b>-</b>For multiple fields separate the fields by AND. For Ex: fmno:00269 AND jobSkillCode:DIR<br/>
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Provide person type as "Partner" or "Non Partner". Default is "Partner"
+        schema:
+          type: string
+      - name: fmno
+        in: query
+        description: FMNO of the person
+        schema:
+          type: string
+      - name: firstName
+        in: query
+        description: First Name of CSP person
+        schema:
+          type: string
+      - name: middleName
+        in: query
+        description: Middle Name of CSP person
+        schema:
+          type: string
+      - name: lastName
+        in: query
+        description: Last Name of CSP person
+        schema:
+          type: string
+      - name: fullName
+        in: query
+        description: Full Name of CSP person
+        schema:
+          type: string
+      - name: preferredName
+        in: query
+        description: Preferred Name of CSP person
+        schema:
+          type: string
+      - name: omitNullFields
+        in: query
+        description: |-
+          Use this field to control the null value fields in the response
+          set. It accepts 'true' or 'false'. The default is set to 'true'. true indcates
+          that the response set will not contain the fields that have null value and
+          false indicates the response will contain the fields that have the null
+          values
+        schema:
+          type: string
+      - name: careerTitle
+        in: query
+        description: Career Title
+        schema:
+          type: string
+      - name: jobSkillCode
+        in: query
+        description: Skill Code of a person
+        schema:
+          type: string
+      - name: jobSkillDesc
+        in: query
+        description: Job Skill Description of a person
+        schema:
+          type: string
+      - name: impactLevel
+        in: query
+        description: Impact Level
+        schema:
+          type: string
+      - name: impactLevelDesc
+        in: query
+        description: Impact Level Description
+        schema:
+          type: string
+      - name: jobImpactBandCode
+        in: query
+        description: |-
+          A code which defines the scope and degree of contribution of a role/skill code; Roll up of Sub Impact Band
+        schema:
+          type: string
+      - name: jobSubImpactBandCode
+        in: query
+        description: |-
+          A code which specifies the scope and degree of contribution of a role/skill code;
+          indicates a trajectory within a band; Roll up of Skill Code;
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        description: Start date of person record
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        description: End date of person record
+        schema:
+          type: string
+      - name: partnerIndicator
+        in: query
+        description: Partner Indicator
+        schema:
+          type: string
+      - name: staffingOfficeCode
+        in: query
+        description: Staffing Office of a person
+        schema:
+          type: string
+      - name: payrollOfficeCode
+        in: query
+        description: Payroll office of a person
+        schema:
+          type: string
+      - name: city
+        in: query
+        description: City name where person resides
+        schema:
+          type: string
+      - name: regionName
+        in: query
+        description: Region name where person resides
+        schema:
+          type: string
+      - name: countryName
+        in: query
+        description: Country name where person resides
+        schema:
+          type: string
+      - name: currentRecordIndicator
+        in: query
+        description: This field indicates if the record is the person's latest data. 'Y' if current record else 'N'
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: |-
+          Indicates start of record. Start of record by default is from 1.
+          Use this in combination with limit for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: |-
+          Indicates no of records to be returned. Default is 10.
+          Use this in combination with offset for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: fields
+        in: query
+        description: |-
+          Use this to determine the fields returned in the response. Separate the required fields with a comma.
+          Example: fields=fmno,jobSkillCode,regionName
+          If not passed, all the available fields will be returned'
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonHistoryResponse'
+          description: Success
+        "404":
+          description: Resource not found
+        "500":
+          description: Internal Server Error
+      security:
+      - oauth_clientcredentials: []
+
+components:
+  schemas:
+    GetPersonHistoryResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/GetPersonHistoryPayload'
+
+    GetPersonHistoryPayload:
+      description: Returns history of current and former partners & non partners
+      type: object
+      properties:
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        persons:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonHistory'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        limit:
+          description: |-
+            Indicates no of records to be returned. Default is 10.
+            Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        offset:
+          description: |-
+            Indicates start of record. Start of record by default is from 1.
+            Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+
+    PersonHistory:
+      type: object
+      description: history of current and former partners & non partners
+      properties:
+        endDate:
+          description: End date of person record
+          type: string
+        city:
+          description: City Name where person resides.
+          type: string
+        documentType:
+          description: Visa Type
+          type: string
+        documentNumber:
+          description: SSN/TIN for a US Citizen/Alien ; Visa no for person in Visa
+          type: string
+        regionName:
+          description: Region Name where person resides
+          type: string
+        firstName:
+          description: First Name of CSP Person
+          type: string
+        middleName:
+          description: Middle Name of CSP Person
+          type: string
+        lastName:
+          description: Last Name of CSP Person
+          type: string
+        fullName:
+          description: Full Name of CSP Person
+          type: string
+        jobSkillDesc:
+          description: Job Skill Description of a person
+          type: string
+        jobSkillCode:
+          description: Skill Code of a person
+          type: string
+        staffingOfficeCode:
+          description: Staffing Office of a person
+          type: string
+        payrollOfficeCode:
+          description: Payroll office of a person
+          type: string
+        fmno:
+          description: FMNO of the person
+          type: string
+        preferredName:
+          description: Full name of CSP Person
+          type: string
+        countryName:
+          description: Country name where person resides
+          type: string
+        partnerIndicator:
+          description: Partner Indicator
+          type: string
+        startDate:
+          description: Start date of person record
+          type: string
+        careerTitle:
+          description: Career Title
+          type: string
+        currentRecordIndicator:
+          description: current Record Indicator
+          type: string
+        taxOfficeCode:
+          description: Tax Office Code
+          type: string
+        taxOfficeClusterCode:
+          description: TaxOffice Cluster Code
+          type: string
+        staffingOfficeClusterCode:
+          description: Staffing Office Cluster Code
+          type: string
+        payrollOfficeClusterCode:
+          description: Payroll Office Cluster Code
+          type: string
+        personType:
+          description: Person Type
+          type: string
+        documentType2:
+          description: Document Type 2
+          type: string
+        documentNumber2:
+          description: Document Number 2
+          type: string
+        documentType3:
+          description: Document Type 3
+          type: string
+        documentNumber3:
+          description: Document Number 3
+          type: string
+        gocOfficesClusterCode:
+          description: GOC Office Cluster Code
+          type: string
+        gocOfficeCode:
+          description: GOC Office Code
+          type: string
+        impactLevel:
+          description: impactLevel
+          type: string
+        impactLevelDesc:
+          description: impact Level Desc
+          type: string
+        jobImpactBandCode:
+          description: job Impact Band Code
+          type: string
+        jobSubImpactBandCode:
+          description: job Sub Impact Band Code
+          type: string
+        type:
+          description: Partner or Non Partner.
+          type: string
+
+  securitySchemes:
+    oauth_clientcredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token
+          scopes: {}
+          tokenUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token?grant_type=client_credentials

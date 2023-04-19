@@ -1,0 +1,220 @@
+openapi: 3.0.3
+info:
+  title: "Person Milestones API"
+  version: "1.0"
+  description: This is the Person Milestones API
+
+servers:
+  - url: https://dev-api.mckinsey.com/
+
+externalDocs:
+  description: Find out more
+  url: https://apidocs.intranet.mckinsey.com
+
+tags:
+  - name: PersonMilestonesV1
+    externalDocs:
+      description: Find out more
+      url: 'https://dev-apiportal.mckinsey.com/apis'
+
+paths:
+  /human-resources-restricted/v1/person_milestones:
+    get:
+      tags:
+        - PersonMilestonesV1
+      operationId: getPersonMilestones
+      summary: The API returns Person Milestones
+      description: |-
+        <b>API Description:</b> This API provides a history of career achievements and personal changes for Firm employees.<br/>
+        <b>Business Logic/Filter on data:</b> Full history data available. For the specific set of fields, please use the fields parameter with an asterix or the specific field names. All of the fields in the response are indexed and can be used to filter results<br/>
+        <b>Source overview: </b> APIx>Solr>Datahub<br/>
+        <b>Hypermedia Links:</b> No<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Works with "Try it Out"?:</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency :</b>Database refresh frequency is every 2 hours starting 01:00 AM EST<br/>
+        <b>Caching enabled and time to live:</b> None<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The total no of records displayed are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      parameters:
+      - name: q
+        in: query
+        description: Use the 'q' parameter to do a full text search on Person Milestones API.<br/>
+        required: true
+        schema:
+          type: string
+      - name: fmno
+        in: query
+        description: The unique identifier for a person, whether internal or external worker.
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: The Block to which milestone belong.
+        schema:
+          type: string
+      - name: attribute
+        in: query
+        description: The kind of milestone
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: An indicator showing a level of attainment, progress, or status in an area
+        schema:
+          type: string
+      - name: currentRecord
+        in: query
+        description: A flag showing whether the row is the most recent milestone
+          in the Data Hub
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        description: The first day the Firm member reached the milestone
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        description: The date on which a Firm Member reached a new milestone
+        schema:
+          type: string
+      - name: updateDate
+        in: query
+        description: Audit column which identifies the date when the person milestone was last updated in the Data Hub
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: |-
+          Indicates start of record. Start of record by default is from 1.
+          Use this in combination with limit for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: |-
+          Indicates no of records to be returned. Default is 10.
+          Use this in combination with offset for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: fields
+        in: query
+        description: |-
+          Use this to determine the fields returned in the response. Separate the required fields with a comma.
+          Ex: fields=category,attribute.
+          If not passed, all the available fields will be returned
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: omitNullFields
+        in: query
+        description: Use this field to control the null value fields in the response set. It accepts 'true' or 'false'. The default is set to 'true'. true indcates that the response set will not contain the fields that have null value and false indicates the response will contain the fields that have the null values
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonMilestonesResponse'
+        "404":
+          description: Resource not found
+        "500":
+          description: Internal Server Error
+      security:
+      - oauth_clientcredentials: []
+
+components:
+  schemas:
+    GetPersonMilestonesResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/GetPersonMilestonesPayload'
+
+    GetPersonMilestonesPayload:
+      description: Returns person milestones data.
+      type: object
+      properties:
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        person_milestones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonMilestone'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        limit:
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        offset:
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+
+    PersonMilestone:
+      description: person milestones data
+      type: object
+      properties:
+        fmno:
+          description: fmno
+          type: string
+        firstName:
+          description: First Name
+          type: string
+        lastName:
+          description: Last Name
+          type: string
+        category:
+          description: category
+          type: string
+        attribute:
+          description: attribute
+          type: string
+        value:
+          description: value
+          type: string
+        currentRecord:
+          description: currentRecord
+          type: string
+        startDate:
+          description: startDate
+          type: string
+        endDate:
+          description: endDate
+          type: string
+        updateDate:
+          description: updateDate
+          type: string
+        lastUpdateDate:
+          description: lastUpdateDate
+          type: string
+
+  securitySchemes:
+    oauth_clientcredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token
+          scopes: {}
+          tokenUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token?grant_type=client_credentials

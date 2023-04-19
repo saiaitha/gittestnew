@@ -1,0 +1,306 @@
+openapi: 3.0.3
+info:
+  title: "Person Leaves API"
+  version: "1.0"
+  description: This is the Person Leaves API
+
+servers:
+  - url: https://dev-api.mckinsey.com/
+
+externalDocs:
+  description: Find out more
+  url: https://apidocs.intranet.mckinsey.com
+
+tags:
+  - name: PersonLeavesV1
+    externalDocs:
+      description: Find out more
+      url: 'https://dev-apiportal.mckinsey.com/apis'
+
+paths:
+  /human-resources-restricted/v1/person_leaves:
+    get:
+      tags:
+        - PersonLeavesV1
+      operationId: getPersonLeaves
+      summary: The API returns person leaves
+      description: |-
+        <b>API Description:</b> This API provides the leave data for a person both current and historical.<br/>
+        <b>Business Logic/Filter on data:</b> Full history data available. For the specific set of fields, please use the fields parameter with an asterix or the specific field names. All of the fields in the response are indexed and can be used to filter results<br/>
+        <b>Source overview: </b> APIx>Solr>Firm Wide DataWarehouse<br/>
+        <b>Hypermedia Links:</b> No<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Works with "Try it Out"?:</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency :</b>Every 2 hours starting 01:20 AM EST<br/>
+        <b>Caching enabled and time to live:</b> None<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The total no of records displayed are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      parameters:
+      - name: q
+        in: query
+        description: Use the 'q' parameter to do a full text search on Person Leaves API.<br/>
+        required: true
+        schema:
+          type: string
+      - name: fmno
+        in: query
+        description: Firm Member Number
+        schema:
+          type: string
+      - name: leaveTypeId
+        in: query
+        description: Identifies the persons leave type
+        schema:
+          type: integer
+          format: int32
+      - name: leaveTypeName
+        in: query
+        description: Identifies type of leave eg. Deferral, Personal, Military, Education, Transition, Maternity, etc
+        schema:
+          type: string
+      - name: actualLeaveStartDate
+        in: query
+        description: The start date of the period of the absence
+        schema:
+          type: string
+      - name: projectedLeaveEndDate
+        in: query
+        description: The expected end date of the period of the absence
+        schema:
+          type: string
+      - name: projectedLeaveStartDate
+        in: query
+        description: The exepcted start date of the period of the absence
+        schema:
+          type: string
+      - name: currentRecordIndicator
+        in: query
+        description: \'Y\' If current record else \'N\'
+        schema:
+          type: string
+      - name: projectedStartDateId
+        in: query
+        description: Identifier to Date dim for start date of projected leave
+        schema:
+          type: integer
+          format: int64
+      - name: projectedEndDateId
+        in: query
+        description: Identifier to Date dim for end date of projected leave
+        schema:
+          type: integer
+          format: int64
+      - name: actualStartDateId
+        in: query
+        description: Identifier to Date dim for start date of actual leave
+        schema:
+          type: integer
+          format: int64
+      - name: actualLeaveEndDate
+        in: query
+        description: The end date of the period of the absence
+        schema:
+          type: string
+      - name: leaveBenefitType
+        in: query
+        description: Indicates whether or not a Firm Member is paid while on leave
+        schema:
+          type: string
+      - name: actualLeaveEndDateId
+        in: query
+        description: Identifier to Date dim for end date of actual leave
+        schema:
+          type: integer
+          format: int64
+      - name: actualPartialLeavePercent
+        in: query
+        description: Percentage of partial leave
+        schema:
+          type: string
+      - name: srcAbsenceAttendanceId
+        in: query
+        description: src Absence Attendance Id
+        schema:
+          type: string
+      - name: comments
+        in: query
+        description: Remarks the user input that are relevant to the person leave
+        schema:
+          type: string
+      - name: deleteFlag
+        in: query
+        description: \'Y\' if deleted from Source else \'N\'
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: |-
+          Indicates start of record. Start of record by default is from 1.
+          Use this in combination with limit for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: |-
+          Indicates no of records to be returned. Default is 10.
+          Use this in combination with offset for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: fields
+        in: query
+        description: |-
+          Use this to determine the fields returned in the response. Separate the required fields with a comma.
+          Ex: fields=fmno,leaveTypeName.
+          If not passed, all the available fields will be returned
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: omitNullFields
+        in: query
+        description: Use this field to control the null value fields in the response
+          set. It accepts 'true' or 'false'. The default is set to 'true'. true indicates
+          that the response set will not contain the fields that have null value and
+          false indicates the response will contain the fields that have the null
+          values
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonLeavesResponse'
+        "404":
+          description: Resource not found
+        "500":
+          description: Internal Server Error
+      security:
+      - oauth_clientcredentials: []
+
+components:
+  schemas:
+    GetPersonLeavesResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/GetPersonLeavesPayload'
+
+    GetPersonLeavesPayload:
+      description: Returns person leaves data.
+      type: object
+      properties:
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        person_leaves:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonLeave'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        limit:
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        offset:
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+
+    PersonLeave:
+      description: person leaves data
+      type: object
+      properties:
+        actualLeaveStartDate:
+          description: actualLeaveStartDate
+          type: string
+        projectedLeaveStartDate:
+          description: projectedLeaveStartDate
+          type: string
+        updateDate:
+          description: updateDate
+          type: string
+        comments:
+          description: comments
+          type: string
+        actualLeaveEndDateId:
+          description: actualLeaveEndDateId
+          type: integer
+          format: int64
+        lastUpdateDate:
+          description: lastUpdateDate
+          type: string
+        actualStartDateId:
+          description: actualStartDateId
+          type: integer
+          format: int64
+        creationDate:
+          description: creationDate
+          type: string
+        deleteFlag:
+          description: deleteFlag
+          type: string
+        projectedEndDateId:
+          description: projectedEndDateId
+          type: integer
+          format: int64
+        projectedLeaveEndDate:
+          description: projectedLeaveEndDate
+          type: string
+        fmno:
+          description: fmno
+          type: string
+        projectedStartDateId:
+          description: projectedStartDateId
+          type: integer
+          format: int64
+        actualLeaveEndDate:
+          description: actualLeaveEndDate
+          type: string
+        leaveTypeName:
+          description: leaveTypeName
+          type: string
+        leaveBenefitType:
+          description: leaveBenefitType
+          type: string
+        leaveTypeId:
+          description: leaveTypeId
+          type: integer
+          format: int32
+        actualPartialLeavePercent:
+          description: actualPartialLeavePercent
+          type: string
+        currentRecordIndicator:
+          description: currentRecordIndicator
+          type: string
+
+        srcAbsenceAttendanceId:
+          description: srcAbsenceAttendanceId
+          type: string
+
+  securitySchemes:
+    oauth_clientcredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token
+          scopes: {}
+          tokenUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token?grant_type=client_credentials

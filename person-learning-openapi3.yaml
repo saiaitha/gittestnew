@@ -1,0 +1,461 @@
+openapi: 3.0.3
+info:
+  title: "Person Learning API"
+  version: "1.0"
+  description: This is the Person Learning API
+
+servers:
+  - url: https://dev-api.mckinsey.com/
+
+externalDocs:
+  description: Find out more
+  url: https://apidocs.intranet.mckinsey.com
+
+tags:
+  - name: PersonLearningV1
+    externalDocs:
+      description: Find out more
+      url: 'https://dev-apiportal.mckinsey.com/apis'
+
+paths:
+  /learn/v1/person_learning:
+    get:
+      tags:
+        - PersonLearningV1
+      operationId: getPersonLearning
+      summary: The API returns the person learning details
+      description: |-
+        <b>API Description :</b>This API Provides Person (FTE) Learning history during his/her tenure in Mckinsey
+        (starting from 2012 onwards), which includes
+        - Type of Course: Online/in-Person courses
+        - Course status: registered,Waitlisted,In-progress,completed .<br/>
+        <b>Business Logic/Filter on data:</b>
+        The API is giving data for FTE''s only and course which are reported to ePeople.<br/>
+        <b>Source overview : </b> APIx>Solr>Firm Wide DataWarehouse<br/>
+        <b>Hypermedia Links:</b> No<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency :</b> Daily, at 6.00 AM EST<br/>
+        <b>Caching enabled and time to live :</b> None<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The api returns 10 records by default. If you wish to change this use the limit query parameter.
+        Also an offset is provided and can be used in combination with limit for paginating results.
+        Gives data from 2012 onwards.<br/>
+      parameters:
+        - name: q
+          in: query
+          description: |-
+            Use the "q" parameter to search for a persons learning details.<br/>
+            <b>-</b>For details for a specific person use q=fmno:127642<br/>
+            <b>-</b>For multiple fields separate the fields by AND. For Ex: fmno:127642 AND courseLevel:Foundational<br/>
+            <b>-</b>For date ranges use the format as: fmno:127642 AND completionDatetime:["2015-09-25T14:45:00Z" TO "2017-09-25T14:45:00Z"]<br/>
+          required: true
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            Indicates start of record. Start of record by default is from 1.
+            Use this in combination with limit for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: |-
+            Indicates no of records to be returned. Default is 10.
+            Use this in combination with offset for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          description: |-
+            Use this to determine the fields returned in the response. Separate the required fields with a comma.
+            Ex: fields=fmno,courseLevel,trainingTitle
+            If not passed, all the available fields will be returned
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: registrationDatetime
+          in: query
+          description: registrationDatetime
+          schema:
+            type: string
+        - name: trainingType
+          in: query
+          description: trainingType
+          schema:
+            type: string
+        - name: trainingModifiedDate
+          in: query
+          description: trainingModifiedDate
+          schema:
+            type: string
+        - name: trainingStartdate
+          in: query
+          description: trainingStartdate
+          schema:
+            type: string
+        - name: trainingEnddate
+          in: query
+          description: trainingEnddate
+          schema:
+            type: string
+        - name: isArchived
+          in: query
+          description: isArchived
+          schema:
+            type: string
+        - name: completionDatetime
+          in: query
+          description: completionDatetime
+          schema:
+            type: string
+        - name: trainingCreateDate
+          in: query
+          description: trainingCreateDate
+          schema:
+            type: string
+        - name: recordCreateDate
+          in: query
+          description: recordCreateDate
+          schema:
+            type: string
+        - name: lastTransStatusChangeDate
+          in: query
+          description: lastTransStatusChangeDate
+          schema:
+            type: string
+        - name: sendToKnowFlg
+          in: query
+          description: sendToKnowFlg
+          schema:
+            type: string
+        - name: trainingDeactivationDate
+          in: query
+          description: trainingDeactivationDate
+          schema:
+            type: string
+        - name: requestDatetime
+          in: query
+          description: requestDatetime
+          schema:
+            type: string
+        - name: klpFramework
+          in: query
+          description: klpFramework
+          schema:
+            type: string
+        - name: timeInTraining
+          in: query
+          description: timeInTraining
+          schema:
+            type: integer
+            format: int32
+        - name: courseLevel
+          in: query
+          description: courseLevel
+          schema:
+            type: string
+        - name: isRemoved
+          in: query
+          description: isRemoved
+          schema:
+            type: string
+        - name: isStandaloneOnTranscript
+          in: query
+          description: isStandaloneOnTranscript
+          schema:
+            type: string
+        - name: trainingTitle
+          in: query
+          description: trainingTitle
+          schema:
+            type: string
+        - name: sendToL2ttFlg
+          in: query
+          description: sendToL2ttFlg
+          schema:
+            type: string
+        - name: personType
+          in: query
+          description: personType
+          schema:
+            type: string
+        - name: trainingDueDate
+          in: query
+          description: trainingDueDate
+          schema:
+            type: string
+        - name: totalHoursAttended
+          in: query
+          description: totalHoursAttended
+          schema:
+            type: string
+        - name: trainingLocatorNo
+          in: query
+          description: trainingLocatorNo
+          schema:
+            type: integer
+            format: int32
+        - name: eventLoId
+          in: query
+          description: eventLoId
+          schema:
+            type: string
+        - name: trainingId
+          in: query
+          description: trainingId
+          schema:
+            type: string
+        - name: sourceEventId
+          in: query
+          description: sourceEventId
+          schema:
+            type: string
+        - name: courseOwnerFirmwideLearning
+          in: query
+          description: courseOwnerFirmwideLearning
+          schema:
+            type: string
+        - name: srcLoid
+          in: query
+          description: srcLoid
+          schema:
+            type: string
+        - name: transcriptAdditionDate
+          in: query
+          description: transcriptAdditionDate
+          schema:
+            type: string
+        - name: fmno
+          in: query
+          description: fmno
+          schema:
+            type: string
+        - name: recordUpdateDate
+          in: query
+          description: recordUpdateDate
+          schema:
+            type: string
+        - name: sendToEpeopleFlg
+          in: query
+          description: sendToEpeopleFlg
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: status
+          schema:
+            type: string
+        - name: omitNullFields
+          in: query
+          description: |-
+            Use this field to control the null value fields in the response
+            set. It accepts 'true' or 'false'. The default is set to 'true'. true indcates
+            that the response set will not contain the fields that have null value and
+            false indicates the response will contain the fields that have the null
+            values
+          schema:
+            type: string
+
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonLearningResponse'
+          description: Success
+        "404":
+          description: Resource not found
+        "406":
+          description: Input data is in invalid format
+        "500":
+          description: Internal Server Error
+      security:
+        - oauth_clientcredentials: []
+
+components:
+  schemas:
+    GetPersonLearningResponse:
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/ResponsePayload'
+
+    ResponsePayload:
+      type: object
+      properties:
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        person_learning:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonLearning'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        q:
+          description: |-
+            Use the "q" parameter to search for a persons learning details.<br/>
+            <b>-</b>For details for a specific person use q=fmno:127642<br/>
+            <b>-</b>For multiple fields separate the fields by 'AND' keyword, e.g.: fmno:127642 AND courseLevel:Foundational<br/>
+          type: string
+        limit:
+          description: |-
+            Indicates no of records to be returned. Default is 10.
+            Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        offset:
+          description: |-
+            Indicates start of record. Start of record by default is from 1.
+            Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+        fields:
+          description: |-
+            Use this to determine the fields returned in the response. Separate the required fields with a comma.
+            Ex: fields=fmno,courseLevel,trainingTitle
+            If not passed, all the available fields will be returned
+          type: string
+
+    PersonLearning:
+      description: Person learning details
+      type: object
+      properties:
+        isArchived:
+          description: is Archived
+          type: string
+        fmno:
+          description: Uniquely-assigned identifier for a Person
+          type: string
+        srcLoid:
+          description: System generated Identifier for learning course in Cornerstone system
+          type: string
+        requestDatetime:
+          description: The date and timestamp of when the Person requested the Course
+          type: string
+        registrationDatetime:
+          description: The date and timestamp of when the Person registered for the Course
+          type: string
+        completionDatetime:
+          description: The date and timestamp of when the Person has completed the course
+          type: string
+        trainingStartdate:
+          description: Course start date and timestamp
+          type: string
+        trainingEnddate:
+          description: Course End date and timestamp
+          type: string
+        sourceEventId:
+          description: unique Identifier from CSOD for Course event
+          type: string
+        trainingTitle:
+          description: Course title.
+          type: string
+        trainingId:
+          description: Unique Identifier for a learning course.
+          type: string
+        status:
+          description: Person Course status (ie. Waitlisted, In-Progress etc)
+          type: string
+        totalHoursAttended:
+          description: Total Training Hours attended for the course.
+          type: string
+        courseLevel:
+          description: Course level(ie.describes about the level of course content  like
+            Foundation, Advanced, or Mastery)
+          type: string
+        klpFramework:
+          description: Category of Course (ie. Signifies type of course Knowledge, Leadership, Professional skills)
+          type: string
+        courseOwnerFirmwideLearning:
+          description: Team who owns the course
+          type: string
+        trainingLocatorNo:
+          description: |-
+            It is a unique identifier of Course session when there is a in-person course session,
+            Null for online course
+          type: integer
+          format: int32
+        eventLoId:
+          description: System generated Identifier for Course event in Cornerstone
+          type: string
+        trainingType:
+          description: Learning course type (ie Online session , In person Event)
+          type: string
+        sendToEpeopleFlg:
+          description: |-
+            SEND_TO_EPEOPLE : Transcript record was sent to ePEOPLE for Human Resource per core learning tracking
+            on course completion and course registration
+            Valid values are "Yes", or "No"
+          type: string
+        sendToL2ttFlg:
+          description: |-
+            SEND_TO_L2TT :  Transcript record was sent to Level-2 Training tracking application
+            Valid values are valid values are "Yes", or "No"
+          type: string
+        isRemoved:
+          description: Is Removed
+          type: string
+        isStandaloneOnTranscript:
+          description: Is Standalone On Transcript
+          type: string
+        lastTransStatusChangeDate:
+          description: lastTransStatusChangeDate
+          type: string
+        personType:
+          description: Person Type
+          type: string
+        recordCreateDate:
+          description: Record Create Date
+          type: string
+        recordUpdateDate:
+          description: Record Update Date
+          type: string
+        sendToKnowFlg:
+          description: sendToKnowFlg
+          type: string
+        timeInTraining:
+          description: timeInTraining
+          type: integer
+          format: int32
+        trainingCreateDate:
+          description: trainingCreateDate
+          type: string
+        trainingDeactivationDate:
+          description: trainingDeactivationDate
+          type: string
+        trainingDueDate:
+          description: Training Due Date
+          type: string
+        trainingModifiedDate:
+          description: Training Modified Date
+          type: string
+        transcriptAdditionDate:
+          description: Transcript Addition Date
+          type: string
+
+  securitySchemes:
+    oauth_clientcredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token
+          scopes: {}
+          tokenUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token?grant_type=client_credentials

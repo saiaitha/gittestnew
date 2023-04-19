@@ -1,0 +1,262 @@
+openapi: 3.0.3
+info:
+  title: "Partner EY Tenure API"
+  version: "1.0"
+  description:  This is the Partner EY Tenure API
+
+servers:
+  - url: https://dev-api.mckinsey.com/
+
+externalDocs:
+  description: Find out more
+  url: https://apidocs.intranet.mckinsey.com
+
+tags:
+  - name: PartnerEyTenureV1
+    externalDocs:
+      description: Find out more
+      url: 'https://dev-apiportal.mckinsey.com/apis'
+
+paths:
+  /ey-tenure/v1/partner_ey_tenure:
+    get:
+      tags:
+        - PartnerEyTenureV1
+      operationId: getYearEndTenure
+      summary: The API returns Year End Tenure for Partners
+      description: |-
+        <b>API Description :</b> This api provides the Year End tenure for partners.<br/>
+        <b>Business Logic/Filter on data :</b> None.<br/>
+        <b>Source overview : </b> APIx>Solr>Datahub<br/>
+        <b>Hypermedia Links :</b>  No<br/>
+        <b>Security Level :</b> Level 3 (Permissioned)<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency :</b> 3 hours<br/>
+        <b>Caching enabled and time to live :</b> None<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.<br/>
+      parameters:
+      - name: q
+        in: query
+        description: |-
+          Use the "q" parameter to search for year end tenure for a given fmno.<br/>
+          <b>-</b>For details for a record use q=fmno:05444<br/>
+          <b>-</b>For multiple fields separate the fields by AND. For Ex: fmno:05444 AND personEyTenureId:46814<br/>
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: fields
+        in: query
+        description: |-
+          Use this to determine the fields returned in the response. Separate the required fields with a comma.
+          Ex: fields=fmno,eyEvalYear,preEyTenYear.
+          If not passed, all the available fields will be returned
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: omitNullFields
+        in: query
+        description: |-
+          Use this field to control the null value fields in the response set. It accepts 'true' or 'false'.
+          The default is set to 'true'. 'true' indicates that the response set will not contain the fields that have null value
+          and 'false' indicates the response will contain the fields that have the null values
+        schema:
+          type: string
+      - name: effectiveEndDate
+        in: query
+        description: Effective End Date
+        schema:
+          type: string
+      - name: preEyTenYymm
+        in: query
+        description: preEyTenYymm
+        schema:
+          type: string
+      - name: eyTenYymm
+        in: query
+        description: eyTenYymm
+        schema:
+          type: string
+      - name: updateDate
+        in: query
+        description: updateDate
+        schema:
+          type: string
+      - name: preEyTenYear
+        in: query
+        description: preEyTenYear
+        schema:
+          type: string
+      - name: eyEvalYear
+        in: query
+        description: eyEvalYear
+        schema:
+          type: string
+      - name: personEyTenureId
+        in: query
+        description: personEyTenureId
+        schema:
+          type: integer
+          format: int64
+      - name: eyTenYear
+        in: query
+        description: eyTenYear
+        schema:
+          type: string
+      - name: preEyTenMm
+        in: query
+        description: preEyTenMm
+        schema:
+          type: string
+      - name: evaluationYear
+        in: query
+        description: evaluationYear
+        schema:
+          type: string
+      - name: eyTenMm
+        in: query
+        description: eyTenMm
+        schema:
+          type: string
+      - name: fmno
+        in: query
+        description: fmno
+        schema:
+          type: string
+      - name: effectiveStartDate
+        in: query
+        description: effectiveStartDate
+        schema:
+          type: string
+      - name: eyTenure
+        in: query
+        description: eyTenure
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetYearEndTenureResponse'
+          description: Success
+        "404":
+          description: Resource not found
+        "500":
+          description: Internal Server Error
+      security:
+      - oauth_clientcredentials: []
+
+components:
+  schemas:
+    GetYearEndTenureResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/Response'
+
+    Response:
+      description: Returns list of Year End tenure for partners
+      type: object
+      properties:
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        partner_ey_tenure:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerEyTenure'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        q:
+          description: |-
+            Use the "q" parameter to search for year end tenure for a given fmno.<br/>
+            <b>-</b>For details for a record use q=fmno:05444<br/>
+            <b>-</b>For multiple fields separate the fields by AND. For Ex: fmno:05444 AND personEyTenureId:46814<br/>
+          type: string
+        limit:
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        offset:
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+        fields:
+          description: |-
+            Use this to determine the fields returned in the response. Separate the required fields with a comma.
+            Ex: fields=fmno,eyEvalYear,preEyTenYear.
+            If not passed, all the available fields will be returned
+          type: string
+
+    PartnerEyTenure:
+      description: Year End tenure for partners
+      type: object
+      properties:
+        fmno:
+          description: Firm Members/External workers firm member number
+          type: string
+        personEyTenureId:
+          description: Unique Id to identify the EY tenure records.
+          type: integer
+          format: int64
+        evaluationYear:
+          description: Year for which tenure is calculated
+          type: string
+        eyTenure:
+          description: Year end tenure in Year+Months format
+          type: string
+        effectiveEndDate:
+          type: string
+        preEyTenYymm:
+          type: string
+        updateDate:
+          type: string
+        preEyTenYear:
+          type: string
+        eyEvalYear:
+          type: string
+        eyTenYear:
+          type: string
+        preEyTenMm:
+          type: string
+        eyTenMm:
+          type: string
+        effectiveStartDate:
+          type: string
+        eyTenYymm:
+          type: string
+
+  securitySchemes:
+    oauth_clientcredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token
+          scopes: {}
+          tokenUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token?grant_type=client_credentials

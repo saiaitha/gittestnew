@@ -1,0 +1,200 @@
+openapi: 3.0.3
+info:
+  title: "Diversity And Inclusion API"
+  version: "1.0"
+  description: This is the Diversity And Inclusion API
+
+servers:
+  - url: https://dev-api.mckinsey.com/
+
+externalDocs:
+  description: Find out more
+  url: https://apidocs.intranet.mckinsey.com
+
+tags:
+  - name: DiversityAndInclusionV1
+    externalDocs:
+      description: Find out more
+      url: 'https://dev-apiportal.mckinsey.com/apis'
+
+paths:
+  /diversity-and-inclusion/v1/dni/responses:
+    get:
+      tags:
+        - DiversityAndInclusionV1
+      operationId: getDiversityAndInclusion
+      summary: The API returns diversity & inclusion data
+      description: |-
+        <b>API Description :</b> This API provides information about the
+        ADI Firmwide group(s) a user belongs to<br/>
+        <b>Business Logic/Filter on data :</b> For the specific set of fields, please use the fields parameter with
+        an asterix or the specific field names. All of the fields in the response
+        are indexed and can be used to filter results<br/>
+        <b>Source overview : </b> APIx>Solr>FDW<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Caching and frequency :</b> No caching, database refresh frequency is every Wednesday 2 AM EST<br/>
+        <b>Any exceptional scenarios associated to API?:</b> None<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Hypermedia Links:</b> No<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts
+        the access token/apikey only in the header. The total no of records displayed
+        are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      parameters:
+      - name: q
+        in: query
+        description: Use the 'q' parameter to do a full text search on Diversity &
+          Inclusion<br/>
+        required: true
+        schema:
+          type: string
+      - name: Network Group Name
+        in: query
+        description: groupName
+        schema:
+          type: string
+      - name: fdwNetworkId
+        in: query
+        description: Unique identifier for business use.
+        schema:
+          type: integer
+          format: int32
+      - name: response
+        in: query
+        description: Available response of a particular question
+        schema:
+          type: string
+      - name: fmno
+        in: query
+        description: User FMNO
+        schema:
+          type: string
+      - name: deleteFlag
+        in: query
+        description: Delete Flag
+        schema:
+          type: string
+      - name: submissionDate
+        in: query
+        description: Submission Date
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+        schema:
+          type: integer
+          format: int32
+      - name: fields
+        in: query
+        description: 'Use this to determine the fields returned in the response. Separate
+          the required fields with a comma. Ex: fields=groupName,fmno,response. If
+          not passed, all the available fields will be returned'
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: omitNullFields
+        in: query
+        description: Use this field to control the null value fields in the response
+          set. It accepts 'true' or 'false'. The default is set to 'true'. true indicates
+          that the response set will not contain the fields that have null value and
+          false indicates the response will contain the fields that have the null
+          values
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDiversityAndInclusionResponse'
+        "404":
+          description: Resource not found
+        "500":
+          description: Internal Server Error
+      security:
+      - oauth_clientcredentials: []
+
+components:
+  schemas:
+    GetDiversityAndInclusionResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/Response'
+
+    Response:
+      description: Returns diversity data
+      type: object
+      properties:
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        dni_responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/DniResponse'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        limit:
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        offset:
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+
+    DniResponse:
+      description: dni responses
+      type: object
+      properties:
+        groupName:
+          description: groupName
+          type: string
+        fdwNetworkId:
+          description: fdwNetworkId
+          type: integer
+          format: int32
+        response:
+          description: response
+          type: string
+        fmno:
+          description: fmno
+          type: string
+        deleteFlag:
+          description: Delete Flag
+          type: string
+        submissionDate:
+          description: submissionDate
+          type: string
+
+  securitySchemes:
+    oauth_clientcredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token
+          scopes: {}
+          tokenUrl: https://dev-apioauth.mckinsey.com/asg/oauth2/access_token?grant_type=client_credentials
