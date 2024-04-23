@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: "Marital Status API"
+  version: "1.0"
+  description: This is the Marital Status API
+
+tags:
+  - name: MaritalStatusV1
+
+paths:
+  /people-reference-data/v1/marital_status:
+    get:
+      tags:
+        - MaritalStatusV1
+      operationId: getMaritalStatus
+      description: |-
+        <b>API Description :</b> This API shows marital status picklist.<br/>
+        <b>Business Logic/Filter on data :</b> None<br/>
+        <b>Source overview : </b> API Gateway>Document DB>SnowFlake<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Caching and frequency :</b> 3 hour<br/>
+        <b>Any exceptional scenarios associated to API?:</b> None<br/>
+        <b>Security Level:</b> Level 1 (Public)<br />
+        <b>Hypermedia Links:</b> No<br /><b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.<br/>
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetMaritalStatusResponse"
+          description: Success
+        "404":
+          description: Resource not found
+        "406":
+          description: Input data is in invalid format
+        "500":
+          description: Internal Server Error
+      summary: This would fetch all Marital Status.
+
+components:
+  schemas:
+    GetMaritalStatusResponse:
+      description: Marital Status
+      type: object
+      properties:
+        apiVersion:
+          description: Version of this API
+          type: string
+        noOfRecords:
+          type: integer
+          format: int64
+          description: Total Number of Records
+        maritalStatus:
+          type: array
+          items:
+            $ref: "#/components/schemas/MaritalStatus"
+
+    MaritalStatus:
+      description: This would list all the existing Marital Status
+      type: object
+      properties:
+        maritalStatusTypeId:
+          description: Unique identifier for a marital status type record
+          type: integer
+          format: int64
+        maritalStatusCode:
+          description: Code that indicates the marital status type.
+          type: string
+        maritalStatusName:
+          description: Name of the marital status type
+          type: string
+        maritalStatusDesc:
+          description: Description of the marital status.
+          type: string
+        activeInactiveFlag:
+          description: activeInactiveFlag
+          type: string
+        fromDate:
+          description: The date on which marital status type record is available
+          type: string
+        toDate:
+          description: The date on which marital status type record is no longer available for use
+          type: string
+        updateDate:
+          description: Audit column which identifies the date when the marital status was last updated in the Data Hub
+          type: string
+        createDate:
+          description: Audit column which identifies the date when the marital status type was created in the Data Hub
+          type: string
