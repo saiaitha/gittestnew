@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: "Guilds API"
+  version: "1.0"
+  description: This is the Guilds API
+
+tags:
+  - name: GuildsV1
+
+paths:
+  /firm-reference-data/v1/guilds:
+    get:
+      tags:
+        - GuildsV1
+      operationId: getGuilds
+      description: |-
+        <b>API Description :</b> The API returns the list of Firm guilds which are groups of technical colleagues sharing the same expertise<br/>
+        <b>Business Logic/Filter on data :</b> None<br/>
+        <b>Source overview : </b> API Gateway>Document DB>SnowFlake<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Caching and frequency :</b> 3 hour<br/>
+        <b>Any exceptional scenarios associated to API?:</b> None<br/>
+        <b>Security Level:</b> Level 1 (Public)<br />
+        <b>Hypermedia Links:</b> No<br /><b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.<br/>
+      parameters:
+        - name: activeInactiveFlag
+          in: query
+          description: |-
+            Indicates whether guild is Active or Inactive.
+            Example:
+              Active - would give return all active records
+              Inactive - would return records that have been end dated (as in the source).
+            Passing no value would return all Active records.'
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetGuildsResponse"
+          description: Success
+        "404":
+          description: Resource not found
+        "406":
+          description: Input data is in invalid format
+        "500":
+          description: Internal Server Error
+      summary: This would fetch all guilds.
+
+components:
+  schemas:
+    GetGuildsResponse:
+      description: Guilds
+      type: object
+      properties:
+        apiVersion:
+          description: Version of this API
+          type: string
+        noOfRecords:
+          description: No of Records
+          type: integer
+          format: int64
+        guilds:
+          type: array
+          items:
+            $ref: "#/components/schemas/Guild"
+
+    Guild:
+      description: This would list all the existing guilds
+      type: object
+      properties:
+        guildId:
+          description: Unique identifier for a guild.
+          type: integer
+          format: int32
+        guildCode:
+          description: Abbreviation for the guild name.
+          type: string
+        guildName:
+          description: guild Name.
+          type: string
+        guildFamily:
+          description: guild family.
+          type: string
+        startDate:
+          description: start Date.
+          type: string
+        endDate:
+          description: end Date.
+          type: string
+        createDate:
+          description: create Date.
+          type: string
+        updateDate:
+          description: update Date.
+          type: string
+        activeInactiveFlag:
+          description: active Inactive Flag.
+          type: string

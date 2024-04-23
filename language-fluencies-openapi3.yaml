@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: "Language Fluencies API"
+  version: "2.0"
+  description: This is the Languages Fluencies API
+
+tags:
+  - name: LanguageFluenciesV2
+
+paths:
+  /people-reference-data/v2/language_fluencies:
+    get:
+      tags:
+        - LanguageFluenciesV2
+      operationId: getLanguageFluencies
+      description: |-
+        <b>API Description :</b> This API provides a pick list of McKinsey-defined skill levels of communication in a language.<br/>
+        <b>Business Logic/Filter on data :</b> None<br/>
+        <b>Source overview : </b> API Gateway>Document DB>SnowFlake<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Caching and frequency :</b> 3 hour<br/>
+        <b>Any exceptional scenarios associated to API?:</b> None<br/>
+        <b>Security Level:</b> Level 1 (Public)<br />
+        <b>Hypermedia Links:</b> No<br /><b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.<br/>
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetLanguageFluenciesResponse"
+          description: Success
+        "404":
+          description: Resource not found
+        "406":
+          description: Input data is in invalid format
+        "500":
+          description: Internal Server Error
+      summary: This would fetch all Language Fluencies.
+
+components:
+  schemas:
+    GetLanguageFluenciesResponse:
+      description: Language Fluencies
+      type: object
+      properties:
+        apiVersion:
+          description: Version of this API
+          type: string
+        noOfRecords:
+          type: integer
+          format: int64
+          description: Total Number of Records
+        languageFluencies:
+          type: array
+          items:
+            $ref: "#/components/schemas/LanguageFluency"
+
+    LanguageFluency:
+      description: This would list all the existing language fluencies
+      type: object
+      properties:
+        fluencyId:
+          description: Unique identifier for a language fluency.
+          type: integer
+          format: int64
+        toDate:
+          description: To Date.
+          type: string
+        fromDate:
+          description: From Date.
+          type: string
+        enabledFlag:
+          description: Enabled Flag.
+          type: string
+        fluencyName:
+          description: fluency Name
+          type: string
+        updateDate:
+          description: update Date.
+          type: string
+        createDate:
+          description: create Date.
+          type: string

@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: "Legal Entity API"
+  version: "1.0"
+  description: "This is the Legal Entity API"
+
+tags:
+  - name: LegalEntityV1
+
+paths:
+  /firm-reference-data/v1/legal_entity:
+    get:
+      tags:
+        - LegalEntityV1
+      operationId: getLegalEntity
+      summary: This would fetch all Legal Entities.
+      description: |-
+        <b>API Description :</b> The API returns the list of legal entity details of the Firm<br/>
+        <b>Business Logic/Filter on data :</b> None<br/>
+        <b>Source overview : </b> API Gateway>Document DB>SnowFlake<br/>
+        <b>Works with ''Try it Out''? :</b>Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Caching and frequency :</b> 3 hour<br/>
+        <b>Any exceptional scenarios associated to API?:</b> None<br/>
+        <b>Security Level:</b> Level 1 (Public)<br />
+        <b>Hypermedia Links:</b> No<br />
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.<br/>'
+      parameters:
+        - name: activeInactiveFlag
+          in: query
+          description: 'Indicates whether entity is Active or Inactive. Example: Active
+          - would give return all active records, Inactive - would return records
+          that have been end dated (as in the source). Passing no value would return
+          all Active records.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLegalEntityResponse'
+        404:
+          description: Resource not found
+        406:
+          description: Input data is in invalid format
+        500:
+          description: Internal Server Error
+
+components:
+  schemas:
+    GetLegalEntityResponse:
+      description: Legal Entity Reponse
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: Version of this API
+        noOfRecords:
+          description: No of Records
+          type: integer
+          format: int64
+        legalEntities:
+          type: array
+          description: List of Legal Entities
+          items:
+             $ref: '#/components/schemas/LegalEntity'
+    LegalEntity:
+      type: object
+      description: This would list all the existing legal Entity types
+      properties:
+        legalEntityId:
+          type: integer
+          format: int64
+          description: legal entity Id
+        legalEntityName:
+          type: string
+          description: legal entity Name
+        description:
+          type: string
+          description: description
+        effectiveAsOf:
+          type: string
+          description: effective as Of
+        endDate:
+          type: string
+          description: end Date
+        status:
+          type: string
+          description: status
+        country:
+          type: string
+          description: country
+        currency:
+          type: string
+          description: currency
+        createDate:
+          type: string
+          description: create Date
+        updateDate:
+          type: string
+          description: update Date

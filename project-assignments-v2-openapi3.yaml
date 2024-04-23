@@ -1,0 +1,528 @@
+openapi: 3.0.3
+info:
+  title: "Project Assignments API"
+  version: "2.0"
+  description: "This API provides fmno, start date, end date , status, role etc of
+      all consultants assigned to client engagements."
+
+tags:
+  - name: ProjectAssignmentsV2
+
+paths:
+  /projects/assignments:
+    get:
+      tags:
+        - ProjectAssignmentsV2
+      summary: The API returns Project Assignments
+      operationId: getProjectAssignments
+      description: |-
+        <b>API Description :</b>This API provides fmno, start date, end
+        date , status, role etc of all consultants assigned to client engagements.<br/>
+        <b>Note :</b>This API can also additionally provide confidential information(purple data)
+        about the assignment like the Per Diem Overrides(PDOs). If you would like
+        access to this data please mention it your onboarding form and contact the
+        ORE APM team for the additional approval for the same. <br/>
+        <b>Business Logic/Filter on data :</b>All data available for now, datahub might be updated in future
+        to give data for past few years only. Provides client engagements for now,
+        will have non-client and prospective engagements in future<br/>
+        <b>Source overview :</b> APIx>Solr>Datahub<br/>
+        <b>Hypermedia Links :</b>  No<br/>
+        <b>Security Level :</b> Level 2 (Permissioned)<br/>
+        <b>Works with ''Try it Out''? :</b>Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency :</b>Every 3 hours starting 00:45 AM EST<br/>
+        <b>Caching enabled and time to live :</b> None<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header. The
+        total no of records displayed are 10 with start record at 1 by default. If
+        you wish to change this, utilize the limit and the offset parameters.<br/>
+      parameters:
+        - name: q
+          in: query
+          description: Use the 'q' parameter to do a full text search on assignments.<br/>
+          required: true
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Indicates start of record. Start of record by default is from
+            1. Use this in combination with limit for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: Indicates no of records to be returned. Default is 10.Use this
+            in combination with offset for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: assignmentId
+          in: query
+          description: Unique identifier for an assignment.(For system use only).
+          schema:
+            type: integer
+            format: int64
+        - name: projectId
+          in: query
+          description: The unique system generated numeric identifier for the engagement
+          schema:
+            type: integer
+            format: int64
+        - name: teamId
+          in: query
+          description: Team ID
+          schema:
+            type: integer
+            format: int64
+        - name: chargeCode
+          in: query
+          description: An Engagement identifier. Client or non client engagement code.
+            Client engagement codes are prefixed with an accounting client code and
+            have a numeric sequence as the suffix. Eg. ABC000. Non client engagement
+            code are generally prefix with three letters "ZW%","ZX%","ZY%" or "ZZ%"
+            and have a numeric sequence as the suffix. eg. ZZY000 (Also know as project
+            code and engagement code)
+          schema:
+            type: string
+        - name: linkedProjectId
+          in: query
+          description: Deprecated. The column will be null post-cutover. The unique system generated numeric identifier for the prospective
+            engagement or preliminary engagement
+          schema:
+            type: integer
+            format: int64
+        - name: linkedChargeCode
+          in: query
+          description: Deprecated. The column will be null post-cutover. The prospective or preliminary engagement identifier, also known
+            as preliminary charge code.
+          schema:
+            type: string
+        - name: fmno
+          in: query
+          description: The unique identifier for the person assigned to the engagement
+            or project, whether internal or external worker; if an alumnus is rehired,
+            the FMNO is reactivated
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          description: 'The first day the Firm member is assigned to the engagement.
+          Example: Single - startDate=1987-08-17T00:00:00.000Z, Range - startDate=2016-01-01T00:00:00.000Z
+          TO 2016-01-31T00:00:00.000Z'
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          description: 'The date on which a Firm Member''s role for an assignment to
+          an engagement is scheduled to end. Example: Single - endDate=1987-08-17T00:00:00.000Z,
+          Range - endDate=2016-01-01T00:00:00.000Z TO 2016-01-31T00:00:00.000Z'
+          schema:
+            type: string
+        - name: projectRole
+          in: query
+          description: Indicates the job role that a Firm Member is assigned to for
+            an engagement, e.g., 'ASC', 'EM', 'BA', etc.
+          schema:
+            type: string
+        - name: assignmentStatus
+          in: query
+          description: Indicates the status of a Firm Member's assignment to an engagement.
+            Only 'Staffed' assignment is exposed
+          schema:
+            type: string
+        - name: commitment
+          in: query
+          description: Indicates the percentage commitment of a Firm member on an engagement.
+          schema:
+            type: integer
+            format: int64
+        - name: assignmentType
+          in: query
+          description: Indicator that differentiates whether is assignment is from the
+            staffing function or from time and expense; differentiates those who charge
+            their time to the client and those who are assigned to the engagement or
+            project
+          schema:
+            type: string
+        - name: likelyToExtend
+          in: query
+          description: Indicator if the Firm member assignment is likely to be extended
+            beyond the specified end_date
+          schema:
+            type: string
+        - name: teamName
+          in: query
+          description: Name of the team to which Firm member is staffed
+          schema:
+            type: string
+        - name: staffedCreationDate
+          in: query
+          description: Indicates the date and time on which the assignment was moved
+            to Staffed Status
+          schema:
+            type: string
+        - name: createDate
+          in: query
+          description: Audit column which identifies the date when the assignment record
+            was created in the Data Hub.
+          schema:
+            type: string
+        - name: updateDate
+          in: query
+          description: Audit column which identifies the date when the assignment record
+            was  last updated in the Data Hub
+          schema:
+            type: string
+        - name: covidStatus
+          in: query
+          description: Deprecated but not removed. This is not an applicable column anymore. iStaffing will not be sending this anymore. Indicates covidStatus
+          schema:
+            type: string
+        - name: shared
+          in: query
+          description: Indicates shared
+          schema:
+            type: string
+        - name: fullyRemote
+          in: query
+          description: Indicates fullyRemote
+          schema:
+            type: string
+        - name: edFeedbackFmno
+          in: query
+          description: Indicates edFeedbackFmno
+          schema:
+            type: string
+        - name: emFeedbackFmno
+          in: query
+          description: Indicates emFeedbackFmno
+          schema:
+            type: string
+        - name: apFeedbackFmno
+          in: query
+          description: Indicates apFeedbackFmno
+          schema:
+            type: string
+        - name: geonameId
+          in: query
+          description: Indicates geonameId
+          schema:
+            type: string
+        - name: assignmentLowId
+          in: query
+          description: Indicates assignmentLowId
+          schema:
+            type: integer
+            format: int64
+        - name: assignmentCity
+          in: query
+          description: Indicates assignmentCity
+          schema:
+            type: string
+        - name: assignmentCitySearch
+          in: query
+          description: Indicates assignmentCitySearch
+          schema:
+            type: string
+        - name: assignmentState
+          in: query
+          description: Indicates assignmentState
+          schema:
+            type: string
+        - name: assignmentStateSearch
+          in: query
+          description: Indicates assignmentStateSearch
+          schema:
+            type: string
+        - name: assignmentCountryCode
+          in: query
+          description: Indicates assignmentCountryCode
+          schema:
+            type: string
+        - name: assignmentCountryCodeSearch
+          in: query
+          description: Indicates assignmentCountryCodeSearch
+          schema:
+            type: string
+        - name: lastUpdateDate
+          in: query
+          description: Indicates lastUpdateDate
+          schema:
+            type: string
+        - name: lastUpdateDateSort
+          in: query
+          description: Indicates lastUpdateDateSort
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          description: |-
+            Retrieve only desired fields using specific field names or fields
+            names with wildcards. The API currently displays only the basic set of fields.
+            Use * for the entire set. Ex- linkedChargeCode,fmno . Separate multiple values
+            with a comma. Allowed values: any sub block or fields within the sub block
+            in the response model
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: omitNullFields
+          in: query
+          description: Use this field to control the null value fields in the response
+            set. It accepts 'true' or 'false'. The default is set to 'true'. true indicates
+            that the response set will not contain the fields that have null value and
+            false indicates the response will contain the fields that have the null
+            values
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProjectAssignmentsResponse'
+        400:
+          description: Bad Request being made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProjectAssignmentsResponse'
+        401:
+          description: Unauthorized Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProjectAssignmentsResponse'
+        404:
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProjectAssignmentsResponse'
+        406:
+          description: Input data is in invalid format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProjectAssignmentsResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProjectAssignmentsResponse'
+
+components:
+  schemas:
+    GetProjectAssignmentsResponse:
+      type: object
+      description: Response Model
+      properties:
+        response:
+          $ref: '#/components/schemas/Response'
+
+    Response:
+      type: object
+      description: Returns assignment details
+      properties:
+        transactionID:
+          description: The transaction Id associated with this data response
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        noOfRecords:
+          type: integer
+          format: int64
+          description: Total Number of Records
+        apiVersion:
+          type: string
+          description: API version
+        params:
+          $ref: '#/components/schemas/Parameters'
+        project_assignments:
+          type: array
+          description: List of Project assignments
+          items:
+            $ref: '#/components/schemas/ProjectAssignment'
+
+    Status:
+      description: The overall status of this response
+      type: object
+      properties:
+        httpStatusCode:
+          description: The http status code associated with this response
+          type: integer
+          format: int32
+        message:
+          description: The http status message associated with this response
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+
+    Error:
+      description: optional query parameters
+      type: object
+      properties:
+        subCode:
+          description: The API error code corresponding to this error
+          type: integer
+          format: int32
+        message:
+          description: The API error message corresponding to this error
+          type: string
+        reason:
+          description: The reason for this API error
+          type: string
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        q:
+          description: q param
+          type: string
+        omitNullFields:
+          description: Omit Null Fields
+          type: string
+        offset:
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+        limit:
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        fields:
+          description: |-
+            Use this to determine the fields returned in the response. Separate the required fields with a comma.
+            Ex: fmno,assignmentStatus.
+            If not passed, all the available fields will be returned
+          type: string
+        sort:
+          description: |-
+            Returns the record in sorted order.
+            Allowed value: fieldname asc or fieldname desc
+            (where fieldname can be fmno, projectId, etc.)
+          type: string
+
+    ProjectAssignment:
+      type: object
+      properties:
+        assignmentStatus:
+          type: string
+          description: Indicates the status of a Firm Member's assignment to an engagement,
+            e.g., 'Interested', 'Tentative', 'Confirmed', etc.
+        updateDate:
+          type: string
+          description: Audit column which identifies the date when the assignment
+            record was  last updated in the Data Hub
+        endDate:
+          type: string
+          description: The date on which a Firm Member's role for an assignment to
+            an engagement is scheduled to end.
+        linkedProjectId:
+          type: integer
+          format: int32
+          description: Deprecated. The column will be null post-cutover. The unique system generated numeric identifer for the prospective
+            engagement or preliminary engagement
+        commitment:
+          type: integer
+          format: int32
+          description: Indicates the percentage commitment of a Firm member on an
+            engagement.
+        assignmentId:
+          type: integer
+          format: int64
+          description: Unique identifier for an assignment.
+        assignmentType:
+          type: string
+          description: Indicator that differentiates whether is assignment is from
+            the staffing function or from time and expense
+        linkedChargeCode:
+          type: string
+          description: Deprecated. The column will be null post-cutover. The prospective or perliminary engagement identifier, also
+            known as preliminary charge code.
+        projectRole:
+          type: string
+          description: Indicates the job role that a Firm Member is assigned to for
+            an engagement, e.g., 'BD', 'ED', 'DCS', etc.
+        fmno:
+          type: string
+          description: The unique identifier for the person assigned to the engagement
+            or project, whether internal or external worker; if an alumnus is rehired,
+            the FMNO is reactivated
+        likelyToExtend:
+          type: string
+          description: likely To Extend
+        teamName:
+          type: string
+          description: Name of the team to which Firm member is staffed
+        staffedCreationDate:
+          type: string
+          description: Indicates the date and time on which the assignment was moved
+            to Staffed Status
+        projectId:
+          type: integer
+          format: int64
+          description: The unique system generated numeric identifer for the engagement
+        teamId:
+          type: integer
+          format: int64
+          description: Team ID
+        startDate:
+          type: string
+          description: The first day the Firm member is assigned to the engagement
+        chargeCode:
+          type: string
+          description: An Engagement identifier. Client or non client engagement code.
+        createDate:
+          type: string
+          description: Audit column which identifies the date when the assignment
+            record was created in the Data Hub
+        shared:
+          type: string
+          description: Shared.
+        emFeedbackFmno:
+          type: string
+          description: emFeedbackFmno
+        lastUpdateDate:
+          type: string
+          description: lastUpdateDate.
+        covidStatus:
+          type: string
+          description: Deprecated but not removed. This is not an applicable column anymore. iStaffing will not be sending this anymore.
+        edFeedbackFmno:
+          type: string
+          description: edFeedbackFmno.
+        fullyRemote:
+          type: string
+          description: fullyRemote.
+        apFeedbackFmno:
+          type: string
+          description: apFeedbackFmno.
+        geo:
+          type: array
+          items:
+            $ref: '#/components/schemas/Geo'
+      description: project assignments
+
+    Geo:
+      type: object
+      properties:
+        geonameId:
+          type: string
+        assignmentState:
+          type: string
+        assignmentCity:
+          type: string
+        assignmentLowId:
+          type: integer
+          format: int64
+        assignmentCountryCode:
+          type: string
+        createDate:
+          type: string

@@ -1,0 +1,322 @@
+openapi: 3.0.3
+info:
+  title: "Proposals Summary API"
+  version: "1.0"
+  description: This is the Proposals Summary API
+
+tags:
+  - name: ProposalSummaryV1
+
+paths:
+  /proposals/v1/proposals/summary:
+    get:
+      tags:
+        - ProposalSummaryV1
+      operationId: getProposalSummary
+      summary: The API returns proposal summary
+      description: |-
+        <b>API Description :</b>This API provides the proposal details.<br/>
+        <b>Business Logic/Filter on data :</b>For the specific set of fields, please use the fields
+        parameter with an asterix or the specific field names. All of the fields in
+        the response are indexed and can be used to filter results<br/>
+        <b>Source overview: </b> API Gateway>Elastic Search>SnowFlake<br/>
+        <b>Hypermedia Links :</b>  No<br/>
+        <b>Security Level :</b> Level 2 (Permissioned)<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Data refresh frequency :</b>No caching, database refresh frequency is every 05:02,11:02,17:02 hour of a day in EST<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header. The total no of
+        records displayed are 10 with start record at 1. If you wish to change this, utilize the limit and the offset params.<br/>
+      parameters:
+        - name: q
+          in: query
+          description: Use the 'q' parameter to do a full text search on Proposals Summary<br/>
+          required: true
+          schema:
+            type: string
+        - name: engagementName
+          in: query
+          description: Name of the engagement.
+          schema:
+            type: string
+        - name: engStartDate
+          in: query
+          description: Start date of the engagement
+          schema:
+            type: string
+        - name: billingCurrencyCode
+          in: query
+          description: Billing Currency Code.
+          schema:
+            type: string
+        - name: officeCode
+          in: query
+          description: Office Code
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          description: 'Use this to determine the fields returned in the response. Separate the required fields with a comma.
+          Ex: fields=officeCode,countOfAsBa,proposalId.
+          If not passed, all the available fields will be returned'
+          required: true
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: omitNullFields
+          in: query
+          description: Use this field to control the null value fields in the response
+            set. It accepts 'true' or 'false'. The default is set to 'true'. true indcates
+            that the response set will not contain the fields that have null value and
+            false indicates the response will contain the fields that have the null
+            values
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: |-
+            Returns the record in sorted order.
+            Allowed value: fieldname asc or fieldname desc
+            (where fieldname can be countryId, countryCode, etc.)
+          schema:
+            type: string
+        - name: dateRange
+          in: query
+          description: |-
+            Returns the records defined in the dateRange.
+            Example 1: dateRange createdDate "2022-06-08T17:58:34Z" now
+            Example 2: dateRange createdDate "2022-06-08T17:58:34Z" "2022-12-08T17:58:34Z"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProposalSummaryResponse'
+        400:
+          description: Bad Request being made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProposalSummaryResponse'
+        401:
+          description: Unauthorized Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProposalSummaryResponse'
+        404:
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProposalSummaryResponse'
+        406:
+          description: Input data is in invalid format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProposalSummaryResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProposalSummaryResponse'
+
+components:
+  schemas:
+    GetProposalSummaryResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/Response'
+
+    Response:
+      description: Returns proposals summary
+      type: object
+      properties:
+        correlationID:
+          description: The correlation Id associated with this data response
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        proposals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalSummary'
+    Status:
+      description: The overall status of this response
+      type: object
+      properties:
+        httpStatusCode:
+          description: The http status code associated with this response
+          type: integer
+          format: int32
+        message:
+          description: The http status message associated with this response
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+
+    Error:
+      description: optional query parameters
+      type: object
+      properties:
+        subCode:
+          description: The API error code corresponding to this error
+          type: integer
+          format: int32
+        message:
+          description: The API error message corresponding to this error
+          type: string
+        reason:
+          description: The reason for this API error
+          type: string
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        q:
+          type: string
+          description: q param
+        omitNullFields:
+          type: string
+          description: Omit Null Fields
+        offset:
+          type: integer
+          format: int32
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+        limit:
+          type: integer
+          format: int32
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+        fields:
+          type: string
+          description: |-
+            Use this to determine the fields returned in the response. Separate the required fields with a comma.
+            Ex: fields=proposalId, countOfAsBa, confidentialFlag.
+            If not passed, all the available fields will be returned
+        sort:
+          description: |-
+            Returns the record in sorted order.
+            Allowed value: fieldname asc or fieldname desc
+            (where fieldname can be countryId, countryCode, etc.)
+          type: string
+    ProposalSummary:
+      description: proposals summary
+      type: object
+      properties:
+        lopOpenFlag:
+          description: lopOpenFlag
+          type: string
+        countOfEm:
+          description: countOfEm
+          type: integer
+          format: int32
+        hubSupportRejected:
+          description: hubSupportRejected
+          type: string
+        competitiveFlag:
+          description: competitiveFlag
+          type: string
+        engagementName:
+          description: engagementName
+          type: string
+        originInstance:
+          description: originInstance
+          type: string
+        updatedDate:
+          description: updatedDate
+          type: string
+        billingCurrencyCode:
+          description: billingCurrencyCode
+          type: string
+        proposalId:
+          description: proposalId
+          type: integer
+          format: int64
+        createdByFmno:
+          description: createdByFmno
+          type: integer
+          format: int32
+        result:
+          description: result
+          type: string
+        engStartDate:
+          description: engStartDate
+          type: string
+        countOfAsBa:
+          description: countOfAsBa
+          type: integer
+          format: int32
+        srcPartyId:
+          description: srcPartyId
+          type: string
+        requestHubSupport:
+          description: requestHubSupport
+          type: string
+        confidentialFlag:
+          description: confidentialFlag
+          type: string
+        engagementProbability:
+          description: engagementProbability
+          type: string
+        officeCode:
+          description: officeCode
+          type: string
+        updatedByFmno:
+          description: updatedByFmno
+          type: integer
+          format: int32
+        warRoomSupported:
+          description: warRoomSupported
+          type: string
+        createdDate:
+          description: createdDate
+          type: string
+        engEndDate:
+          description: engEndDate
+          type: string
+        expectedBilledFees:
+          description: expectedBilledFees
+          type: integer
+          format: int64
+        hubSupportType:
+          description: hubSupportType
+          type: string
+        engagementId:
+          description: engagementId
+          type: integer
+          format: int64
+        status:
+          description: status
+          type: string
