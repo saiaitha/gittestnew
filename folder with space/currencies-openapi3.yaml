@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: "Currencies API"
+  version: "2.0"
+  description: This is the Currencies API
+
+tags:
+  - name: CurrenciesV2
+
+paths:
+  /firm-reference-data/v2/currencies:
+    get:
+      tags:
+        - CurrenciesV2
+      operationId: getCurrencies
+      summary: This would fetch all the currencies.
+      description: |-
+        <b>API Description :</b> The API returns list of currencies<br/>
+        <b>Security Level :</b> Level 2 (Permissioned)<br/><b>Hypermedia Links: </b>No</br>
+        <b>Business Logic/Filter on data :</b> This API fetches distinct list of currencies from Datahub<br/>
+        <b>Source overview : </b> API Gateway>Document DB>SnowFlake<br/>
+        <b>Works with ''Try it Out''? :</b> Yes<br/>
+        <b>Application Context/User Context/Both:</b> Application Context<br/>
+        <b>Caching and frequency :</b> 3 hour<br/>
+        <b>Any exceptional scenarios associated to API?:</b> None<br/>
+      parameters:
+        - name: activeInactiveFlag
+          in: query
+          description: |-
+            Indicates whether currency is Active or Inactive.
+            Example:
+              Active - would give return all active records
+              Inactive - would return records that have been end dated (as in the source).
+            Passing no value would return all Active records.'
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCurrenciesResponse"
+          description: Success
+        "404":
+          description: Resource not found
+        "406":
+          description: Input data is in invalid format
+        "500":
+          description: Internal Server Error
+
+components:
+  schemas:
+    GetCurrenciesResponse:
+      type: object
+      properties:
+        apiVersion:
+          description: Version of this API
+          type: string
+        noOfRecords:
+          description: No of Records
+          type: integer
+          format: int64
+        currencies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Currency"
+
+    Currency:
+      type: object
+      properties:
+        currencyId:
+          description: Currency Id
+          type: integer
+          format: int64
+        currencyCode:
+          description: Currency Code
+          type: string
+        currencyName:
+          description: Currency Name
+          type: string
+        currencyDesc:
+          description: Currency Desc
+          type: string
+        fromDate:
+          description: From Date
+          type: string
+        toDate:
+          description: To Date
+          type: string
+        activeInactiveFlag:
+          description: Active Inactive Flag
+          type: string
