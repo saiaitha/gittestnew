@@ -1,0 +1,379 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Person Service"
+  description: "Set of services related to CDM Contact Person operations"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Person Service"
+    description: "CDM Person Service APIs"
+paths:
+  /cdm/persons/createPerson:
+    post:
+      tags:
+        - CDM Person Service
+      summary: Create Contact Person into CDM
+      description: Create a contact person in cdm
+      operationId: createPerson
+      requestBody:
+        description: Create request for Contact Person in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [PartyId]
+              properties:
+                PersonFirstName:
+                  type: string
+                  example: "David"
+                  description: First name of the person.
+                PersonLastName:
+                  type: string
+                  example: "Beckham"
+                  description: Last name of the person.
+                EmailAddress:
+                  type: string
+                  example: "email@xyz.com"
+                  description: Email address.
+                PartyId:
+                  type: integer
+                  example: 100000000787550
+                  description: Party Id in which contact person needs to be added.
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePersonResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+
+  /cdm/persons/findPerson:
+    get:
+      tags:
+        - CDM Person Service
+      summary: Get Contact Person from CDM
+      description: Get Contact Person from CDM
+      operationId: findPerson
+      parameters:
+        - name: "party_id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindPersonResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    CreatePersonResponse:
+      title: CreatePersonResponse
+      type: object
+      properties:
+        createPersonResponse:
+          $ref: '#/components/schemas/result'
+      required:
+        - result
+    result:
+      title: result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/Value'
+    Value:
+      title: Value
+      type: object
+      properties:
+        Value:
+          $ref: '#/components/schemas/Values'
+    Values:
+      title: Value
+      type: object
+      properties:
+        CategoryCode:
+          description: ''
+          type: string
+        CreationDate:
+          description: ''
+          type: string
+        UserGUID:
+          description: ''
+          type: string
+        PersonLastNamePrefix:
+          description: ''
+          type: string
+        PartyName:
+          description: ''
+          type: string
+        SICCodeType:
+          description: ''
+          type: string
+        PersonMiddleName:
+          description: ''
+          type: string
+        Gender:
+          description: ''
+          type: string
+        PrimaryPhoneContactPTId:
+          description: ''
+          type: string
+        PersonTitle:
+          description: ''
+          type: string
+        SourceSystemUpdateDate:
+          description: ''
+          type: string
+        PersonSecondLastName:
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        PreferredContactMethod:
+          description: ''
+          type: string
+        LastUpdatedBy:
+          description: ''
+          type: string
+        Status:
+          description: ''
+          type: string
+        DateOfBirth:
+          description: ''
+          type: string
+        CreatedBy:
+          description: ''
+          type: string
+        RequestId:
+          description: ''
+          type: string
+        PersonLastName:
+          description: ''
+          type: string
+        PrimaryPhoneAreaCode:
+          description: ''
+          type: string
+        PreferredFunctionalCurrency:
+          description: ''
+          type: string
+        PersonFirstName:
+          description: ''
+          type: string
+        City:
+          description: ''
+          type: string
+        CertificationLevel:
+          description: ''
+          type: string
+        Province:
+          description: ''
+          type: string
+        EmailAddress:
+          description: ''
+          type: string
+        ValidatedFlag:
+          description: ''
+          type: boolean
+        PersonPreviousLastName:
+          description: ''
+          type: string
+        MaritalStatus:
+          description: ''
+          type: integer
+        State:
+          description: ''
+          type: string
+        ThirdPartyFlag:
+          description: ''
+          type: string
+        PrimaryPhoneNumber:
+          description: ''
+          type: string
+        Country:
+          description: ''
+          type: string
+        GSAIndicatorFlag:
+          description: ''
+          type: string
+        LanguageName:
+          description: ''
+          type: string
+        PrimaryPhonePurpose:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: string
+        SICCode:
+          description: ''
+          type: string
+        LastUpdateLogin:
+          description: ''
+          type: string
+        PreferredContactPersonId:
+          description: ''
+          type: integer
+        PersonNameSuffix:
+          description: ''
+          type: string
+        PostalCode:
+          description: ''
+          type: string
+        PartyUniqueName:
+          description: ''
+          type: string
+        County:
+          description: ''
+          type: string
+        Salutation:
+          description: ''
+          type: string
+        URL:
+          description: ''
+          type: string
+        PrimaryPhoneExtension:
+          description: ''
+          type: integer
+        Address4:
+          description: ''
+          type: string
+        PersonAcademicTitle:
+          description: ''
+          type: string
+        PreferredName:
+          description: ''
+          type: string
+        PartyType:
+          description: ''
+          type: string
+        JgzzFiscalCode:
+          description: ''
+          type: string
+        PersonPreNameAdjunct:
+          description: ''
+          type: string
+        CertReasonCode:
+          description: ''
+          type: string
+        Comments:
+          description: ''
+          type: string
+        PartyNumber:
+          description: ''
+          type: integer
+        PartyId:
+          description: ''
+          type: integer
+        IdenAddrPartySiteId:
+          description: ''
+          type: integer
+        SourceSystem:
+          description: ''
+          type: string
+        IdenAddrLocationId:
+          description: ''
+          type: integer
+        LastUpdateDate:
+          description: ''
+          type: string
+        Email:
+          description: ''
+          type: object
+        PersonProfile:
+          description: ''
+          type: object
+        Relationship:
+          description: ''
+          type: object
+        PartyUsageAssignment:
+          description: ''
+          type: object
+    FindPersonResponse:
+      title: FindPerson
+      type: object
+      properties:
+        findPersonResponse:
+          $ref: '#/components/schemas/FindPersonResult'
+      required:
+        - findPersonResponse
+    FindPersonResult:
+      title: FindPerson
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/FindPersonData'
+      required:
+        - result
+    FindPersonData:
+      title: FindPersonResponse
+      type: object
+      properties:
+        '@type':
+          description: ''
+          type: string
+        Value:
+          description: ''
+          type: array
+          items:
+            $ref: '#/components/schemas/FindPersonValue'
+      required:
+        - Value
+    FindPersonValue:
+      title: FindPersonValue
+      type: object
+      properties:
+        PersonLastName:
+          type: "string"
+        PersonFirstName:
+          type: "string"
+        PartyId:
+          type: "integer"
+          format: "int64"
+        Relationship:
+          $ref: '#/components/schemas/FindPersonRelationship'
+      required:
+        - PersonLastName
+        - PersonFirstName
+        - PartyId
+        - Relationship
+    FindPersonRelationship:
+      title: FindPersonRelationship
+      type: object
+      properties:
+        ObjectPartyName:
+          type: "string"
+        ObjectId:
+          type: "integer"
+          format: "int64"
+      required:
+        - ObjectPartyName
+        - ObjectId

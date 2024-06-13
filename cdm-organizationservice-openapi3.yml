@@ -1,0 +1,2315 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Organization Service"
+  description: "Set of services related to CDM organizations operations"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Organization Service"
+    description: "CDM Organization Service APIs"
+paths:
+  /organizationservice/getOrganization:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: Get Organization from CDM
+      description: Retrieve base client record from CDM by Party ID or Party Number and fetch all Active, Inactive and merged PartySites by includeAllPS flag
+      operationId: getOrganization
+      parameters:
+        - name: party_id
+          in: query
+          required: false
+          schema:
+            type: number
+          description: 'Party Id present in CDM'
+        - name: party_number
+          in: query
+          required: false
+          schema:
+            type: number
+          description: 'Party Number present in CDM'
+        - name: includeAllPS
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'To include all Party Sites in response from CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationParty'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/mergeOrganization:
+    post:
+      tags:
+        - CDM Organization Service
+      summary: Merge Organization into CDM
+      description: Update the existing base client record in CDM by request payload with Party ID
+      operationId: mergeOrganization
+      requestBody:
+        description: Update request for Party in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                "@prefix":
+                  type: string
+                  example: "typ"
+                organizationParty:
+                  type: object
+                  properties:
+                    "@prefix":
+                      type: string
+                      example: "org"
+                    OrganizationProfile:
+                      type: object
+                      example: {"@prefix": "org",
+                                "Comments": "Test Update Comment"}
+                    PartyId:
+                      type: string
+                      example: "300000013262282"
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MergeOrganizationResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/additionalId:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: Fetch Additional Ids from CDM
+      description: Retrieve additional client record from CDM by Party ID
+      operationId: getAdditionalIdDetails
+      parameters:
+        - name: Organization_Id_AccountToAdditionalId
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Party Id present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdditionalPartyId'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+    post:
+      tags:
+        - CDM Organization Service
+      summary: Create Additional Id into CDM
+      description: Create an additional id in cdm or you can also create and add the additional id to any existing cdm party
+      operationId: createAdditionalId
+      requestBody:
+        description: Create request for AdditionalId in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [IdentifierValue_c, IssuingAuthorityName_c]
+              properties:
+                IdentifierType_c:
+                  type: string
+                  example: "INDUSTRIAL_REFERENCE"
+                  description: Fixed value to be used. Any other value will be rejected.
+                IdentifierValue_c:
+                  type: string
+                  example: "10122311"
+                  description: Value to be stored.
+                IssuingAuthorityName_c:
+                  type: string
+                  example: "D&B"
+                  description: The issuing authority whose Id needs to be stored.
+                Organization_Id_AccountToAdditionalId:
+                  type: integer
+                  example: 300000013262282
+                  format: int32
+                  description: Party Id in which additional id needs to be added.
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdditionalPartyId'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/capiqDetails:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: Fetch Capiq Ids from CDM
+      description: Retrieve capiq client record from CDM by Party ID
+      operationId: getCapiqDetails
+      parameters:
+        - name: Organization_Id_AccountToCAPIQdata
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Party Id present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapiqPartyId'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+    post:
+      tags:
+        - CDM Organization Service
+      summary: Add CAPIQ Id to a CDM party id
+      description: Create a capiq object and add it to any existing cdm party
+      operationId: getCapiqDetails
+      requestBody:
+        description: Create request for CAPIQ in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [MCK_CapIQ_ID_c, Organization_Id_AccountToCAPIQdata]
+              properties:
+                MCK_CapIQ_ID_c:
+                  type: string
+                  example: "5687153"
+                  description: CAPIQ Id to be used.
+                MCK_CapIQ_Name_c:
+                  type: string
+                MCK_HQ_Address_c:
+                  type: string
+                MCK_Zipcode_c:
+                  type: string
+                MCK_Region_c:
+                  type: string
+                MCK_Ultimate_Parent_ID_c:
+                  type: string
+                MCK_Ultimate_Parent_Name_c:
+                  type: string
+                MCK_Industry_c:
+                  type: string
+                MCK_Classification_c:
+                  type: string
+                MCK_Client_Size_c:
+                  type: string
+                MCK_Client_Size_Measure_c:
+                  type: string
+                MCK_Client_Size_Currency_c:
+                  type: string
+                MCK_Client_Size_Source_c:
+                  type: string
+                MCK_Market_Cap_Period_c:
+                  type: string
+                MCK_Market_Cap_Value_c:
+                  type: string
+                MCK_Ticker_c:
+                  type: string
+                MCK_Description_c:
+                  type: string
+                Organization_Id_AccountToCAPIQdata:
+                  type: integer
+                  example: 300000013262282
+                  format: int32
+                  description: Party Id in which capiq needs to be added.
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapiqPartyId'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/findOrganization:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: Find Organization in CDM
+      description: Retrieve base client record from CDM by Party Number or search name(organization name) and filter by showAll (ReviewStatus)
+      operationId: findOrganization
+      parameters:
+        - name: search
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'Organization name in CDM'
+        - name: party_number
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Party Number present in CDM'
+        - name: showAll
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'ReviewStatus present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/v2/organisations/{party_id}:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: Get Organization V2 from CDM
+      description: Retrieve base client record from CDM by Party Id and fetch all Active, Inactive and merged PartySites by includeAllPS
+      operationId: organisationsV2
+      parameters:
+        - name: party_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Party ID present in CDM'
+        - name: includeAllPS
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'To include all Party Sites in response from CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationParty'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/csc:
+    post:
+      tags:
+        - CSC Service
+      summary: Create CSC into CDM
+      description: Create CSC in CDM
+      operationId: createCSC
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCscRequest"
+        required: true
+      responses:
+        '201':
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CscResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+    get:
+      tags:
+        - CSC Service
+      summary: Get CSC from CDM
+      description: Get CSC from CDM
+      operationId: getCSC
+      parameters:
+        - name: "PartyNumber"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+          description: 'Party Number present in CDM'
+        - name: "PartyId"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+          description: 'Party Id present in CDM'
+        - name: "HouseholdName"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+          description: 'Household name present in CDM'
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CscResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/updateCSC:
+    patch:
+      tags:
+        - CSC Service
+      summary: Update CSC into CDM
+      description: Update CSC in CDM
+      operationId: updateCSC
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCscRequest"
+        required: true
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CscResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/addCSCRelationship:
+    post:
+      tags:
+        - CSC Service
+      summary: "Add CSC Relationship into CDM"
+      description: "Add CSC Relationship into CDM"
+      operationId: addCSCRelationship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCSCRelationshipRequest"
+        required: true
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CscRelationshipResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/deleteCSCRelationship:
+    delete:
+      tags:
+        - CSC Service
+      summary: "Delete CSC Relationship into CDM"
+      description: "Delete CSC Relationship into CDM"
+      operationId: deleteCSCRelationship
+      responses:
+        '200':
+          description: "OK"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/updateCSCRelationship:
+    patch:
+      tags:
+        - CSC Service
+      summary: Update CSC Relationship into CDM
+      description: Update CSC Relationship in CDM
+      operationId: updateCSCRelationship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCscRelationshipRequest"
+        required: true
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CscRelationshipResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/firmIndustryPractice:
+    get:
+      tags:
+        - CSC Service
+      summary: "Get FirmIndustryPractice from CDM"
+      description: "Get FirmIndustryPractice from CDM"
+      operationId: getFirmIndustryPractice
+      parameters:
+        - name: "Id"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "Industry_c"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FirmIndustryPractice"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/accountContact:
+    post:
+      tags:
+        - CSC Service
+      summary: "Add accountContact into CSC in CDM"
+      description: "Add accountContact into CSC in CDM"
+      operationId: createAccountContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountContact"
+        required: true
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountContactResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+    get:
+      tags:
+        - CSC Service
+      summary: "get accountContact of CSC from CDM"
+      description: "get accountContact of CSC from CDM"
+      operationId: "getAccountContact"
+      parameters:
+        - name: "PartyId"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "FMNO"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountContactResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/mergedOrganizations:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: "Get Merged Organizations info from CDM"
+      description: "Get Merged Organizations info from CDM"
+      operationId: "mergedOrganizations"
+      parameters:
+        - name: winner_party_id
+          in: query
+          required: false
+          schema:
+            type: number
+          description: 'Winner Party Id present in CDM'
+        - name: merged_party_id
+          in: query
+          required: false
+          schema:
+            type: number
+          description: 'Merged Party Id present in CDM'
+        - name: start_date
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'Start Date in format DD-MM-YYYY'
+        - name: end_date
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'End Date in format DD-MM-YYYY'
+        - name: offset
+          in: query
+          description: 'Indicates start of record set. Allowed values: 1, 2 ,3 .. etc'
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: 'Indicates no of records to be returned. Allowed values: 1, 2 ,3 .. etc'
+          schema:
+            type: integer
+            format: int32
+            default: 20000
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: "#/components/schemas/MergedOrganizationsDataItem"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /organizationservice/getaudit:
+    get:
+      tags:
+        - CDM Organization Service
+      summary: "Get Audit info from CDM"
+      description: "Get Audit info from CDM"
+      operationId: "getAudit"
+      parameters:
+        - name: "fromDate"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+          description: 'fromDate in format YYYY-MM-DD'
+        - name: "toDate"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+          description: 'toDate in format YYYY-MM-DD'
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    OrganizationParty:
+      title: OrganizationParty
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        OrganizationProfile:
+          $ref: '#/components/schemas/OrganizationProfile'
+        PartyUsageAssignment:
+          description: ''
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyUsageAssignment'
+        PartySite:
+          $ref: '#/components/schemas/PartySite'
+        Phone:
+          $ref: '#/components/schemas/Phone'
+      required:
+        - '@prefix'
+        - CreatedByModule
+        - OrganizationProfile
+        - PartyUsageAssignment
+        - PartySite
+        - Phone
+    OrganizationProfile:
+      title: OrganizationProfile
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        OrganizationName:
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        OrigSystem:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: string
+        OrganizationProfileId:
+          type: integer
+        PartyId:
+          type: integer
+        EnquiryDUNS:
+          type: object
+        CeoName:
+          type: object
+        CeoTitle:
+          type: object
+        PrincipalName:
+          type: object
+        PrincipalTitle:
+          type: object
+        LegalStatus:
+          type: object
+        ControlYr:
+          type: object
+        EmployeesTotal:
+          type: object
+        HQBranchIndicator:
+          type: object
+        BranchFlag:
+          type: object
+        OobInd:
+          type: object
+        LineOfBusiness:
+          type: object
+        CongDistCode:
+          type: object
+        ImportInd:
+          type: object
+        ExportInd:
+          type: object
+        LaborSurplusInd:
+          type: object
+        MinorityOwnedInd:
+          type: object
+        MinorityOwnedType:
+          type: object
+        WomanOwnedInd:
+          type: object
+        Disadv8aInd:
+          type: object
+        SmallBusInd:
+          type: object
+        RentOwnInd:
+          type: object
+        DbRating:
+          type: object
+        GSAIndicatorFlag:
+          type: object
+        JgzzFiscalCode:
+          type: object
+        AnalysisFy:
+          type: object
+        FiscalYearendMonth:
+          type: object
+        CurrentFiscalYearPotentialRevenueAmount:
+          type: object
+        NextFyPotentialRevenueAmount:
+          type: object
+        YearEstablished:
+          type: object
+        MissionStatement:
+          type: object
+        OrganizationType:
+          type: object
+        BusinessScope:
+          type: object
+        CorporationClass:
+          type: object
+        LocalBusIdenType:
+          type: object
+        LocalBusIdentifier:
+          type: object
+        PreferredFunctionalCurrency:
+          type: object
+        RegistrationType:
+          type: object
+        TotalEmployeesText:
+          type: object
+        TotalEmployeesInd:
+          type: object
+        TotalEmployeesEstimatedIndicator:
+          type: object
+        TotalEmployeesMinimumIndicator:
+          type: object
+        ParentSubInd:
+          type: object
+        IncorpYear:
+          type: object
+        LastUpdateDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        CreationDate:
+          type: string
+        CreatedBy:
+          type: string
+        LastUpdateLogin:
+          type: string
+        RequestId:
+          type: integer
+        ContentSourceNumber:
+          type: object
+        EffectiveStartDate:
+          type: string
+        EffectiveEndDate:
+          type: string
+        PublicPrivateOwnershipFlag:
+          type: object
+        LocalActivityCodeType:
+          type: object
+        LocalActivityCode:
+          type: object
+        EmployeesAtPrimaryAddress:
+          type: object
+        EmployeesAtPrimaryAddressText:
+          type: object
+        EmployeesAtPrimaryAddressEstimation:
+          type: object
+        EmployeesAtPrimaryAddressMinimum:
+          type: object
+        InternalFlag:
+          type: "boolean"
+        TotalPaymentAmount:
+          type: object
+        DisplayedDUNSPartyIdentifier:
+          type: object
+        Status:
+          type: string
+        BusinessReport:
+          type: object
+        DUNSNumberC:
+          type: object
+        BankOrBranchNumber:
+          type: object
+        BankCode:
+          type: object
+        BranchCode:
+          type: object
+        DoNotConfuseWith:
+          type: object
+        HomeCountry:
+          type: object
+        GrowthStrategyDescription:
+          type: object
+        SeblUserKeyLoc:
+          type: object
+        StockSymbol:
+          type: object
+        TradingPartnerIdentifier:
+          type: object
+        EffectiveSequence:
+          type: integer
+        Comments:
+          type: string
+        EffectiveLatestChange:
+          type: string
+        OrganizationSize:
+          type: object
+        SuffixOverriddenFlag:
+          type: "boolean"
+        UniqueNameAlias:
+          type: string
+        UniqueNameSuffix:
+          type: object
+        DomesticUltimateDUNSNumberC:
+          type: object
+        GlobalUltimateDUNSNumberC:
+          type: object
+        ParentDUNSNumberC:
+          type: object
+        CorpCurrencyCode:
+          type: string
+        CurcyConvRateType:
+          type: string
+        CurrencyCode:
+          type: string
+        PartyNumber:
+          type: integer
+        CertificationLevel:
+          type: object
+        CertReasonCode:
+          type: object
+        PreferredContactMethod:
+          type: object
+        PreferredContactPersonId:
+          type: object
+        PreferredContactName:
+          type: object
+        PreferredContactEmailAddress:
+          type: object
+        PreferredContactFormattedPhoneNumber:
+          type: object
+        PrimaryAddressLine1:
+          type: string
+        PrimaryAddressLine2:
+          type: string
+        PrimaryAddressLine3:
+          type: object
+        PrimaryAddressLine4:
+          type: object
+        Alias:
+          type: object
+        PrimaryAddressCity:
+          type: string
+        PrimaryAddressCountry:
+          type: string
+        PrimaryAddressCounty:
+          type: object
+        PrimaryEmailAddress:
+          type: object
+        PrimaryFormattedPhoneNumber:
+          type: object
+        IdenAddrLocationId:
+          type: integer
+        IdenAddrPartySiteId:
+          type: integer
+        PrimaryLanguage:
+          type: object
+        PartyUniqueName:
+          type: string
+        PrimaryAddressPostalCode:
+          type: integer
+        PreferredName:
+          type: object
+        PreferredNameId:
+          type: object
+        PrimaryEmailId:
+          type: object
+        PrimaryPhoneAreaCode:
+          type: object
+        PrimaryPhoneId:
+          type: object
+        PrimaryPhoneCountryCode:
+          type: object
+        PrimaryPhoneExtension:
+          type: object
+        PrimaryPhoneLineType:
+          type: object
+        PrimaryPhoneNumber:
+          type: object
+        PrimaryPhonePurpose:
+          type: object
+        PrimaryWebId:
+          type: object
+        Pronunciation:
+          type: object
+        PrimaryAddressProvince:
+          type: object
+        SICCode:
+          type: object
+        SICCodeType:
+          type: object
+        PrimaryAddressState:
+          type: string
+        PrimaryURL:
+          type: object
+        ValidatedFlag:
+          type: object
+        ThirdPartyFlag:
+          type: object
+        LastUpdateSourceSystem:
+          type: string
+        LastSourceUpdateDate:
+          type: string
+        DataCloudStatus:
+          type: object
+        LastEnrichmentDate:
+          type: object
+        MCK_HasMSA_c:
+          type: "boolean"
+        MCK_PaymentTerms_c:
+          type: object
+        MCK_SpecialDLPHandling_c:
+          type: "boolean"
+        MCK_PrimaryFormOfOwnership_c:
+          type: string
+        MCK_StateOwnedEnterprise_c:
+          type: "boolean"
+        MCK_Sanctioned_c:
+          type: "boolean"
+        MCK_InvestmentServices_c:
+          type: "boolean"
+        MCK_ClientSize_c:
+          type: object
+        MCK_ClientSizeMeasure_c:
+          type: object
+        MCK_ClientSizeMeasureCurr_Id_c:
+          type: object
+        MCK_ClientSizeMeasureCurr_c:
+          type: object
+        MCK_ClientSizeYear_c:
+          type: object
+        MCK_ClientSizeSource_c:
+          type: object
+        MCK_ClientSizeUSD_c:
+          type: object
+        MCK_COMStatus_c:
+          type: string
+        MCK_PriorityQualifier_c:
+          type: object
+        MCK_ReviewStatus_c:
+          type: string
+        MCK_AccountingClientCode_c:
+          type: object
+        MCK_ClientSizeTier_c:
+          type: string
+        MCK_EnrichedName_c:
+          type: object
+        MCK_PracticeIndustry_c:
+          type: object
+        MCK_MainPracticeIndustry_c:
+          type: object
+        MCK_COMStatusDetails_c:
+          type: object
+        MCK_ESMAStatus_Value_c:
+          type: string
+        MultiClient_c:
+          type: "boolean"
+        MCK_RebateAgreement_c:
+          type: string
+        MCK_Location_c:
+          type: string
+        MCK_Office_c:
+          type: string
+        MCK_Region_c:
+          type: string
+        MCK_CreatedByApp_c:
+          type: string
+        Ambiguous_c:
+          type: string
+        ReportingLabel_c:
+          type: string
+        AMCAccount_c:
+          type: string
+        AnticipatedMasterClientID_c:
+          type: integer
+        CAPIQId_c:
+          type: integer
+        DataQualityOverride_c:
+          type: "boolean"
+        SourceSystem_c:
+          type: object
+        DataQualityIssues_c:
+          type: string
+        UltimateParentID_c:
+          type: object
+        ParentAccountID_c:
+          type: object
+        CAPIQIDcreate_c:
+          type: object
+        CapIqIDdetails_c:
+          type: string
+        MCK_CreatedByEmail_c:
+          type: object
+        MCK_CreatedByFMNO_c:
+          type: object
+        AMC_c:
+          type: integer
+        WinnerPartyNumber_c:
+          type: object
+        WinnerPartyId_c:
+          type: object
+        CombinedURLs_c:
+          type: string
+        MCK_EkamReview_c:
+          type: string
+        MainParentLabel_c:
+          type: object
+        MainParent_c:
+          type: object
+        WinnerPartyName_c:
+          type: object
+        ParentAccountName_c:
+          type: object
+        UltimateParentName_c:
+          type: object
+        UltimateParentPartyId_c:
+          type: object
+        CapiqUltimateParentCDM_c:
+          type: integer
+      required:
+        - '@prefix'
+        - OrganizationName
+        - CreatedByModule
+        - OrigSystem
+        - OrigSystemReference
+    PartyUsageAssignment:
+      title: PartyUsageAssignment
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        PartyUsageCode:
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+      required:
+        - '@prefix'
+        - PartyUsageCode
+        - CreatedByModule
+    PartySite:
+      title: PartySite
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        LocationId:
+          description: ''
+          type: integer
+          format: int32
+        OrigSystem:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: integer
+          format: int32
+        PartySiteUse:
+          $ref: '#/components/schemas/PartySiteUse'
+      required:
+        - '@prefix'
+        - CreatedByModule
+        - LocationId
+        - OrigSystem
+        - OrigSystemReference
+        - PartySiteUse
+    PartySiteUse:
+      title: PartySiteUse
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        SiteUseType:
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        OrigSystem:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: integer
+          format: int32
+      required:
+        - '@prefix'
+        - SiteUseType
+        - CreatedByModule
+        - OrigSystem
+        - OrigSystemReference
+    Phone:
+      title: Phone
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        OwnerTableName:
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        ContactPointPurpose:
+          description: ''
+          type: string
+        PhoneAreaCode:
+          description: ''
+          type: integer
+          format: int32
+        PhoneCountryCode:
+          description: ''
+          type: integer
+          format: int32
+        PhoneNumber:
+          description: ''
+          type: integer
+          format: int32
+        PhoneExtension:
+          description: ''
+          type: string
+        PhoneLineType:
+          description: ''
+          type: string
+        OrigSystem:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: integer
+          format: int32
+      required:
+        - '@prefix'
+        - OwnerTableName
+        - CreatedByModule
+        - ContactPointPurpose
+        - PhoneAreaCode
+        - PhoneCountryCode
+        - PhoneNumber
+        - PhoneExtension
+        - PhoneLineType
+        - OrigSystem
+        - OrigSystemReference
+    AdditionalPartyId:
+      title: AdditionalPartyId
+      type: object
+      properties:
+        Id:
+          description: ''
+          type: integer
+          format: int32
+        RecordName:
+          description: ''
+          type: string
+        CreatedBy:
+          description: ''
+          type: string
+        CreationDate:
+          description: ''
+          type: string
+        LastUpdatedBy:
+          description: ''
+          type: string
+        LastUpdateDate:
+          description: ''
+          type: string
+        RecordNumber:
+          description: ''
+          type: string
+        LastUpdateLogin:
+          description: ''
+          type: string
+        UserLastUpdateDate:
+          description: ''
+          type: string
+        IdentifierType_c:
+          description: ''
+          type: string
+        IdentifierValue_c:
+          description: ''
+          type: string
+        IssuingAuthorityName_c:
+          description: ''
+          type: string
+        Organization_Id_AccountToAdditionalId:
+          description: ''
+          type: integer
+          format: int32
+      required:
+        - CreatedBy
+        - Id
+        - RecordName
+        - CreationDate
+        - LastUpdatedBy
+        - LastUpdateDate
+        - RecordNumber
+        - LastUpdateLogin
+        - UserLastUpdateDate
+        - IdentifierType_c
+        - IdentifierValue_c
+        - IssuingAuthorityName_c
+        - Organization_Id_AccountToAdditionalId
+    CapiqPartyId:
+      title: CapiqPartyId
+      type: object
+      properties:
+        Id:
+          description: ''
+          type: integer
+          format: int32
+        RecordName:
+          description: ''
+          type: string
+        CreatedBy:
+          description: ''
+          type: string
+        CreationDate:
+          description: ''
+          type: string
+        LastUpdatedBy:
+          description: ''
+          type: string
+        LastUpdateDate:
+          description: ''
+          type: string
+        RecordNumber:
+          description: ''
+          type: string
+        LastUpdateLogin:
+          description: ''
+          type: string
+        ConflictId:
+          description: ''
+          type: integer
+          format: int32
+        UserLastUpdateDate:
+          description: ''
+          type: string
+        CurrencyCode:
+          description: ''
+          type: string
+        CurcyConvRateType:
+          description: ''
+          type: string
+        CorpCurrencyCode:
+          description: ''
+          type: string
+        OraZcxOwner_Id_c:
+          description: ''
+          type: integer
+          format: int64
+        MCK_Classification_c:
+          description: ''
+          type: string
+        MCK_Client_Size_c:
+          description: ''
+          type: string
+        MCK_Client_Size_Currency_c:
+          description: ''
+          type: string
+        MCK_Client_Size_Measure_c:
+          description: ''
+          type: string
+        MCK_Client_Size_Source_c:
+          description: ''
+          type: object
+        MCK_Country_c:
+          description: ''
+          type: string
+        MCK_HQ_Address_c:
+          description: ''
+          type: string
+        MCK_Industry_c:
+          description: ''
+          type: string
+        MCK_Market_Cap_Period_c:
+          description: ''
+          type: object
+        MCK_Market_Cap_Value_c:
+          description: ''
+          type: string
+        MCK_Region_c:
+          description: ''
+          type: object
+        MCK_Ticker_c:
+          description: ''
+          type: object
+        MCK_Ultimate_Parent_ID_c:
+          description: ''
+          type: string
+        MCK_Ultimate_Parent_Name_c:
+          description: ''
+          type: string
+        MCK_Zipcode_c:
+          description: ''
+          type: object
+        SelectedRow:
+          description: ''
+          type: object
+        Organization_Id_AccountToCAPIQdata:
+          description: ''
+          type: integer
+          format: int64
+        MCK_CapIQ_ID_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Name_c:
+          description: ''
+          type: string
+        MCK_Market_Cap_Currency_c:
+          description: ''
+          type: string
+        MCK_City_c:
+          description: ''
+          type: string
+        Mck_Revenue_Year_c:
+          description: ''
+          type: string
+        MCK_State_c:
+          description: ''
+          type: string
+        CAPIQHierarchy_c:
+          description: ''
+          type: object
+        LinkedPartyNumber_c:
+          description: ''
+          type: string
+        Url_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Sector_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Group_c:
+          description: ''
+          type: string
+        MCK_CapIQ_SubIndustry_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Level1_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Level2_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Level3_c:
+          description: ''
+          type: string
+        MCK_CapIQ_Level4_c:
+          description: ''
+          type: string
+        LinkedUltimateParent_c:
+          description: ''
+          type: string
+        MCK_Description_c:
+          description: ''
+          type: string
+      required:
+        - Id
+        - RecordName
+        - CreatedBy
+        - CreationDate
+        - LastUpdatedBy
+        - LastUpdateDate
+        - RecordNumber
+        - LastUpdateLogin
+        - ConflictId
+        - UserLastUpdateDate
+        - CurrencyCode
+        - CurcyConvRateType
+        - CorpCurrencyCode
+        - OraZcxOwner_Id_c
+        - MCK_Classification_c
+        - MCK_Client_Size_c
+        - MCK_Client_Size_Currency_c
+        - MCK_Client_Size_Measure_c
+        - MCK_Client_Size_Source_c
+        - MCK_Country_c
+        - MCK_HQ_Address_c
+        - MCK_Industry_c
+        - MCK_Market_Cap_Period_c
+        - MCK_Market_Cap_Value_c
+        - MCK_Region_c
+        - MCK_Ticker_c
+        - MCK_Ultimate_Parent_ID_c
+        - MCK_Ultimate_Parent_Name_c
+        - MCK_Zipcode_c
+        - SelectedRow
+        - Organization_Id_AccountToCAPIQdata
+        - MCK_CapIQ_ID_c
+        - MCK_CapIQ_Name_c
+        - MCK_Market_Cap_Currency_c
+        - MCK_City_c
+        - Mck_Revenue_Year_c
+        - MCK_State_c
+        - CAPIQHierarchy_c
+        - LinkedPartyNumber_c
+        - Url_c
+        - MCK_CapIQ_Sector_c
+        - MCK_CapIQ_Group_c
+        - MCK_CapIQ_SubIndustry_c
+        - MCK_CapIQ_Level1_c
+        - MCK_CapIQ_Level2_c
+        - MCK_CapIQ_Level3_c
+        - MCK_CapIQ_Level4_c
+        - LinkedUltimateParent_c
+        - MCK_Description_c
+    Organization:
+      title: Organization
+      type: object
+      properties:
+        FindOrganizationResponse:
+          $ref: '#/components/schemas/FindOrganizationResponse'
+      required:
+        - FindOrganizationResponse
+    FindOrganizationResponse:
+      title: FindOrganizationResponse
+      type: object
+      properties:
+        FindOrganizationResult:
+          $ref: '#/components/schemas/FindOrganizationResult'
+      required:
+        - FindOrganizationResult
+    FindOrganizationResult:
+      title: FindOrganizationResult
+      type: object
+      properties:
+        '@type':
+          description: ''
+          type: string
+        FindOrganizationArray:
+          description: ''
+          type: array
+          items:
+            $ref: '#/components/schemas/FindOrganizationArray'
+      required:
+        - '@type'
+        - FindOrganizationArray
+    FindOrganizationArray:
+      title: FindOrganizationArray
+      type: object
+      properties:
+        PartyNumber:
+          description: ''
+          type: integer
+          format: int32
+        PartyId:
+          description: ''
+          type: integer
+          format: int32
+        Address1:
+          description: ''
+          type: string
+        Address2:
+          description: ''
+          type: string
+        Address3:
+          description: ''
+          type: string
+        Address4:
+          description: ''
+          type: string
+        City:
+          description: ''
+          type: string
+        PostalCode:
+          description: ''
+          type: string
+        Country:
+          description: ''
+          type: string
+        County:
+          description: ''
+          type: string
+        Province:
+          description: ''
+          type: string
+        State:
+          description: ''
+          type: string
+        AdditionalPartyId:
+          $ref: '#/components/schemas/FindOrgAdditionalPartyId'
+        OrganizationProfile:
+          $ref: '#/components/schemas/FindOrgOrganizationProfile'
+      required:
+        - PartyNumber
+        - PartyId
+        - Address1
+        - Address2
+        - Address3
+        - Address4
+        - City
+        - PostalCode
+        - County
+        - Country
+        - Province
+        - State
+        - AdditionalPartyId
+    FindOrgAdditionalPartyId:
+      title: FindOrgAdditionalPartyId
+      type: object
+      properties:
+        PartyIdentifierValue:
+          description: ''
+          type: integer
+          format: int32
+        IssuingAuthorityName:
+          description: ''
+          type: string
+      required:
+        - PartyIdentifierValue
+        - IssuingAuthorityName
+    FindOrgOrganizationProfile:
+      title: OrganizationProfile
+      type: object
+      properties:
+        HomeCountry:
+          description: ''
+          type: string
+        OrganizationName:
+          description: ''
+          type: string
+        MCK_ReviewStatus_c:
+          description: ''
+          type: string
+        MCK_MainPracticeIndustry_c:
+          description: ''
+          type: string
+      required:
+        - HomeCountry
+        - OrganizationName
+        - MCK_ReviewStatus_c
+        - MCK_MainPracticeIndustry_c
+    MergeOrganizationResponse:
+      title: MergeOrgResponse
+      type: object
+      properties:
+        mergeOrganizationResponse:
+          type: object
+          properties:
+            result:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "ns2:OrganizationPartyResult"
+                Value:
+                  type: object
+                  properties:
+                    PartyNumber:
+                      type: integer
+                      example: 223415
+                    PartyId:
+                      type: integer
+                      example: 300000013262282
+                    PartyType:
+                      type: string
+                    PartyName:
+                      type: string
+                    LastUpdatedBy:
+                      type: string
+                    ValidatedFlag:
+                      type: object
+                    LastUpdateLogin:
+                      type: string
+                    CreationDate:
+                      type: string
+                    RequestId:
+                      type: integer
+                    LastUpdateDate:
+                      type: string
+                    CreatedBy:
+                      type: string
+                    OrigSystemReference:
+                      type: integer
+                    HQBranchIndicator:
+                      type: object
+                    DUNSNumberC:
+                      type: object
+                    SICCode:
+                      type: object
+                    JgzzFiscalCode:
+                      type: object
+                    Address1:
+                      type: string
+                    Country:
+                      type: string
+                    Address3:
+                      type: object
+                    GroupType:
+                      type: object
+                    Address2:
+                      type: string
+                    Address4:
+                      type: object
+                    Status:
+                      type: string
+                    City:
+                      type: string
+                    PostalCode:
+                      type: integer
+                    County:
+                      type: object
+                    YearEstablished:
+                      type: object
+                    Province:
+                      type: object
+                    State:
+                      type: string
+                    URL:
+                      type: object
+                    AnalysisFy:
+                      type: object
+                    SICCodeType:
+                      type: object
+                    EmailAddress:
+                      type: object
+                    FiscalYearendMonth:
+                      type: object
+                    EmployeesTotal:
+                      type: object
+                    CurrentFiscalYearPotentialRevenueAmount:
+                      type: object
+                    NextFyPotentialRevenueAmount:
+                      type: object
+                    GSAIndicatorFlag:
+                      type: object
+                    CategoryCode:
+                      type: object
+                    LanguageName:
+                      type: object
+                    MissionStatement:
+                      type: object
+                    ThirdPartyFlag:
+                      type: object
+                    HomeCountry:
+                      type: object
+                    CreatedByModule:
+                      type: string
+                    ObjectVersionNumber:
+                      type: integer
+                    CertificationLevel:
+                      type: object
+                    CertReasonCode:
+                      type: object
+                    PrimaryPhonePurpose:
+                      type: object
+                    PrimaryPhoneContactPointId:
+                      type: object
+                    PrimaryPhoneLineType:
+                      type: object
+                    PrimaryPhoneCountryCode:
+                      type: object
+                    PrimaryPhoneAreaCode:
+                      type: object
+                    PrimaryPhoneNumber:
+                      type: object
+                    PreferredContactMethod:
+                      type: object
+                    PrimaryPhoneExtension:
+                      type: object
+                    IdenAddrLocationId:
+                      type: integer
+                    PrimaryURLContactPointId:
+                      type: object
+                    PrimaryEmailContactPointId:
+                      type: object
+                    IdenAddrPartySiteId:
+                      type: integer
+                    PreferredName:
+                      type: object
+                    PersonSecondLastName:
+                      type: object
+                    PreferredNameId:
+                      type: object
+                    TradingPartnerIdentifier:
+                      type: object
+                    PreferredContactPersonId:
+                      type: integer
+                    PreferredFunctionalCurrency:
+                      type: object
+                    InternalFlag:
+                      type: "boolean"
+                    Comments:
+                      type: string
+                    CeoName:
+                      type: object
+                    PrincipalName:
+                      type: object
+                    OrganizationSize:
+                      type: object
+                    PartyUniqueName:
+                      type: string
+                    SourceSystem:
+                      type: object
+                    SourceSystemReferenceValue:
+                      type: object
+                    SourceSystemUpdateDate:
+                      type: object
+
+                    OrganizationProfile:
+                      $ref: '#/components/schemas/OrganizationProfile'
+              required:
+                - "@type"
+                - Value
+          required:
+            - result
+      required:
+        - mergeOrganizationResponse
+    CreateCscRequest:
+      type: "object"
+      properties:
+        HouseholdName:
+          type: "string"
+        GroupDEO_MCK_CSCFirmPracticeIndustry_Id_c:
+          type: "integer"
+          format: "int64"
+        GroupDEO_CSCType_c:
+          type: "string"
+        GroupDEO_MCK_CSCIndustryScope_c:
+          type: "string"
+        GroupDEO_MCK_CSCLocation_c:
+          type: "string"
+        GroupDEO_MCK_CSCDomain_c:
+          type: "string"
+        GroupDEO_MCK_CSCApproved_c:
+          type: "boolean"
+        Comments:
+          type: "string"
+      required:
+        - HouseholdName
+        - GroupDEO_MCK_CSCFirmPracticeIndustry_Id_c
+        - GroupDEO_CSCType_c
+        - GroupDEO_MCK_CSCIndustryScope_c
+        - GroupDEO_MCK_CSCLocation_c
+        - GroupDEO_MCK_CSCDomain_c
+        - GroupDEO_MCK_CSCApproved_c
+    CscResponse:
+      title: CreateCscResponse
+      type: object
+      properties:
+        PartyId:
+          description: ''
+          type: integer
+          format: "int64"
+        PartyStatus:
+          type: string
+        PartyUniqueName:
+          type: string
+        PartyType:
+          type: string
+        ObjectVersionNumberParty:
+          type: integer
+          format: int64
+        CreatedBy:
+          type: string
+        CreationDate:
+          type: string
+        LastUpdateDate:
+          type: string
+        LastUpdateLogin:
+          type: string
+        LastUpdatedBy:
+          type: string
+        PrimaryAddressId:
+          type: integer
+          format: int64
+        PartyNumberKey:
+          type: string
+        SSROwnerTableName:
+          type: string
+        HouseholdProfileId:
+          type: integer
+        GroupPartyId:
+          type: integer
+        ObjectVersionNumberGroup:
+          type: integer
+        PartyNumber:
+          type: string
+        HouseholdName:
+          type: string
+        HouseholdSize:
+          type: string
+        GroupType:
+          type: string
+        GroupDEO_MCK_CSCApproved_c:
+          type: boolean
+        GroupDEO_MCK_CSCApprovedDate_c:
+          type: string
+          format: date
+        GroupDEO_MCK_CSCEndDate_c:
+          type: string
+          format: date
+        GroupDEO_MCK_CSCForPersonnel_c:
+          type: boolean
+        GroupDEO_MCK_CSCPracticeIndustry_c:
+          type: string
+        GroupDEO_CSCType_c:
+          type: string
+        GroupDEO_MCK_CSCFirmPracticeIndustry_Id_c:
+          type: integer
+        GroupDEO_MCK_CSCFirmPracticeIndustry_c:
+          type: string
+        GroupDEO_MCK_CSCIndustryScope_c:
+          type: string
+        GroupDEO_MCK_CSCLocation_c:
+          type: string
+        GroupDEO_MCK_CSCDomain_c:
+          type: string
+      required:
+        - PartyId
+        - PartyStatus
+        - PartyUniqueName
+        - PartyType
+        - ObjectVersionNumberParty
+        - CreatedBy
+        - CreationDate
+        - LastUpdateDate
+        - LastUpdateLogin
+        - LastUpdatedBy
+        - PrimaryAddressId
+        - PartyNumberKey
+        - SSROwnerTableName
+        - HouseholdProfileId
+        - GroupPartyId
+        - ObjectVersionNumberGroup
+        - PartyNumber
+        - HouseholdName
+        - HouseholdSize
+        - GroupType
+        - GroupDEO_MCK_CSCApproved_c
+        - GroupDEO_MCK_CSCApprovedDate_c
+        - GroupDEO_MCK_CSCEndDate_c
+        - GroupDEO_MCK_CSCForPersonnel_c
+        - GroupDEO_MCK_CSCPracticeIndustry_c
+        - GroupDEO_CSCType_c
+        - GroupDEO_MCK_CSCFirmPracticeIndustry_Id_c
+        - GroupDEO_MCK_CSCFirmPracticeIndustry_c
+        - GroupDEO_MCK_CSCIndustryScope_c
+        - GroupDEO_MCK_CSCLocation_c
+        - GroupDEO_MCK_CSCDomain_c
+    UpdateCscRequest:
+      type: "object"
+      properties:
+        HouseholdName:
+          type: "string"
+        GroupDEO_MCK_CSCFirmPracticeIndustry_Id_c:
+          type: "integer"
+          format: "int64"
+        GroupDEO_CSCType_c:
+          type: "string"
+        GroupDEO_MCK_CSCIndustryScope_c:
+          type: "string"
+        GroupDEO_MCK_CSCLocation_c:
+          type: "string"
+        GroupDEO_MCK_CSCDomain_c:
+          type: "string"
+        GroupDEO_MCK_CSCApproved_c:
+          type: "boolean"
+        Comments:
+          type: "string"
+        PartyNumber:
+          type: "integer"
+          format: "int64"
+      required:
+        - HouseholdName
+        - GroupDEO_MCK_CSCFirmPracticeIndustry_Id_c
+        - GroupDEO_CSCType_c
+        - GroupDEO_MCK_CSCIndustryScope_c
+        - GroupDEO_MCK_CSCLocation_c
+        - GroupDEO_MCK_CSCDomain_c
+        - GroupDEO_MCK_CSCApproved_c
+        - PartyNumber
+    UpdateCscRelationshipRequest:
+      type: "object"
+      properties:
+        RelationshipRecId:
+          type: "integer"
+          format: "int64"
+        RelationshipEO_MCK_RelApproved_c:
+          type: "boolean"
+        RelationshipEO_MCK_Anchor_c:
+          type: "boolean"
+        RelationshipEO_CSCMemberRole_c:
+          type: "boolean"
+        PartyNumber:
+          type: "integer"
+          format: "int64"
+      required:
+        - RelationshipRecId
+        - PartyNumber
+    CreateCSCRelationshipRequest:
+      type: "object"
+      properties:
+        ObjectPartyId:
+          type: "integer"
+          format: "int64"
+        SubjectPartyId:
+          type: "integer"
+          format: "int64"
+        SubjectType:
+          type: "string"
+        RelationshipEO_CSCMemberRole_c:
+          type: "string"
+        PartyNumber:
+          type: "string"
+        RelationshipEO_MCK_RelApproved_c:
+          type: boolean
+      required:
+        - ObjectPartyId
+        - SubjectPartyId
+        - SubjectType
+        - PartyNumber
+    CscRelationshipResponse:
+      type: "object"
+      properties:
+        RelationshipType:
+          type: string
+        RelationshipCode:
+          type: string
+        RelationshipSourceSystem:
+          type: string
+        RelationshipSourceSystemReferenceValue:
+          type: string
+        RelationshipId:
+          type: integer
+          format: int64
+        RelationshipRecId:
+          type: integer
+          format: int64
+        ObjectPartyId:
+          type: integer
+          format: int64
+        SubjectPartyId:
+          type: integer
+          format: int64
+        PartyId:
+          type: integer
+          format: int64
+        StartDate:
+          type: string
+          format: date
+        EndDate:
+          type: string
+          format: date
+        CreatedByModule:
+          type: string
+        Comments:
+          type: string
+        Status:
+          type: string
+        CreatedBy:
+          type: string
+        LastUpdatedBy:
+          type: string
+        CreationDate:
+          type: string
+          format: date
+        LastUpdateDate:
+          type: string
+          format: date
+        RelationshipEO_MCK_RelApproved_c:
+          type: boolean
+        RelationshipEO_MCK_Anchor_c:
+          type: boolean
+        RelationshipEO_MCK_PERSONEL_c:
+          type: boolean
+        RelationshipEO_CSCMemberRole_c:
+          type: string
+        RelationshipEO_PersonFmno_c:
+          type: string
+        RelationshipEO_CSCApprovedFlag_c:
+          type: string
+      required:
+        - RelationshipType
+        - RelationshipCode
+        - RelationshipSourceSystem
+        - RelationshipSourceSystemReferenceValue
+        - RelationshipId
+        - RelationshipRecId
+        - ObjectPartyId
+        - SubjectPartyId
+        - PartyId
+        - StartDate
+        - EndDate
+        - CreatedByModule
+        - Comments
+        - Status
+        - CreatedBy
+        - LastUpdatedBy
+        - CreationDate
+        - LastUpdateDate
+        - RelationshipEO_MCK_RelApproved_c
+        - RelationshipEO_MCK_Anchor_c
+        - RelationshipEO_MCK_PERSONEL_c
+        - RelationshipEO_CSCMemberRole_c
+        - RelationshipEO_PersonFmno_c
+        - RelationshipEO_CSCApprovedFlag_c
+    FirmIndustryPractice:
+      type: "object"
+      properties:
+        Id:
+          type: "integer"
+          format: "int64"
+        RecordName:
+          type: "string"
+        CreatedBy:
+          type: string
+        RecordNumber:
+          type: string
+        LastUpdatedBy:
+          type: string
+        CreationDate:
+          type: string
+          format: date
+        LastUpdateDate:
+          type: string
+          format: date
+        IndustryRollup_c:
+          type: string
+        Industry_c:
+          type: string
+        IndustryGroupShortCommon_c:
+          type: string
+        IndustryGroupLongCommon_c:
+          type: string
+        IndustryShortCommon_c:
+          type: string
+        IndustryLongCommon_c:
+          type: string
+      required:
+        - Id
+        - RecordName
+        - CreatedBy
+        - RecordNumber
+        - LastUpdatedBy
+        - CreationDate
+        - LastUpdateDate
+        - IndustryRollup_c
+        - Industry_c
+        - IndustryGroupShortCommon_c
+        - IndustryGroupLongCommon_c
+        - IndustryShortCommon_c
+        - IndustryLongCommon_c
+    AccountContact:
+      type: "object"
+      properties:
+        FirstName:
+          type: "string"
+        LastName:
+          type: "string"
+        PersonDEO_FMNO_c:
+          type: "string"
+    AccountContactResponse:
+      type: "object"
+      properties:
+        PartyId:
+          type: integer
+          format: int64
+        PartyNumber:
+          type: string
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        Comments:
+          type: string
+        CreatedBy:
+          type: string
+        CreationDate:
+          type: string
+          format: date
+        LastUpdateDate:
+          type: string
+          format: date
+        PersonDEO_FMNO_c:
+          type: boolean
+      required:
+        - PartyId
+        - PartyNumber
+        - FirstName
+        - LastName
+        - Comments
+        - CreatedBy
+        - CreationDate
+        - LastUpdateDate
+        - PersonDEO_FMNO_c
+    MergedOrganizationsDataItem:
+      title: MergedOrganizationsDataItem
+      type: object
+      properties:
+        winnerPartyId:
+          type: integer
+          format: int32
+        mergedPartyId:
+          type: integer
+          format: int32
+        mergeRequestId:
+          type: integer
+          format: int32
+        winnerPartyName:
+          type: string
+        winnerPartyNumber:
+          type: integer
+        mergedPartyName:
+          type: string
+        mergedPartyNumber:
+          type: integer
+        dedupReqStatus:
+          type: string
+        requestCreatedBy:
+          type: string
+        requestCreationTimestamp:
+          type: string
+        requestCompletionTimestamp:
+          type: string
+    AuditResponse:
+      type: "object"
+      properties:
+        modifiedPartyIds:
+          type: "array"
+          items:
+            type: "string"

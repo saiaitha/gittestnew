@@ -1,0 +1,245 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Report Service"
+  description: "Set of services related to CDM External Report WSS"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Report Service"
+    description: "CDM External Report WSS Service APIs"
+paths:
+  /externalreportwssservice/runreport:
+    get:
+      tags:
+        - CDM Report Service
+      summary: Fetch CDM Hierarchy Report based on Party ID
+      description: Retrieve CDM Hierarchy Report by Party Id
+      operationId: runReport
+      parameters:
+        - name: party_id
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Party Id present in CDM'
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+          description: '_full report present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/runReportResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /externalreportwssservice/cscPartyNameSearch:
+    get:
+      tags:
+        - CDM Report Service
+      summary: Fetch CDM CSC Party Name Search Report based on Party Name
+      description: Fetch CDM CSC Party Name Search Report based on Party Name
+      operationId: cscPartyNameSearch
+      parameters:
+        - name: party_name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'CSC party name present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CSCRunReportResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+
+components:
+  schemas:
+    runReportResponse:
+      title: runReportResponse
+      type: object
+      properties:
+        runReportResponse:
+          $ref: '#/components/schemas/runReportReturn'
+      required:
+        - runReportReturn
+    runReportReturn:
+      title: runReportReturn1
+      type: object
+      properties:
+        runReportReturn:
+          $ref: '#/components/schemas/reportBytes'
+        reportContentType:
+          description: ''
+          type: string
+        reportFileID:
+          description: ''
+          type: string
+        reportLocale:
+          description: ''
+          type: string
+        metaDataList:
+          description: ''
+          type: string
+    reportBytes:
+      title: reportBytes
+      type: object
+      properties:
+        reportBytes:
+          $ref: '#/components/schemas/HIERARCHY'
+    HIERARCHY:
+      title: HIERARCHY
+      type: object
+      properties:
+        HIERARCHY:
+          $ref: '#/components/schemas/HIERARCHYSTRUCTURETREE'
+      required:
+        - PARTY_ID
+    HIERARCHYSTRUCTURETREE:
+      title: HIERARCHYSTRUCTURETREE
+      type: object
+      properties:
+        PARTY_ID:
+          description: ''
+          type: integer
+          format: int32
+        HIERARCHYSTRUCTURE:
+          $ref: '#/components/schemas/HIERARCHYSTRUCTURE'
+        HIERARCHY_INFO:
+          $ref: '#/components/schemas/HIERARCHYINFO'
+        MASTER_CLIENT_INFO:
+          $ref: '#/components/schemas/MASTERCLIENTINFO'
+    HIERARCHYSTRUCTURE:
+      title: HIERARCHYSTRUCTURE
+      type: array
+      items:
+        properties:
+          CHILD:
+            description: ''
+            type: integer
+            format: int32
+          TYPE:
+            description: ''
+            type: string
+          LABEL:
+            description: ''
+            type: string
+    HIERARCHYINFO:
+      title: HIERARCHY_INFO
+      type: object
+      properties:
+        CHILD_PARTY_ID:
+          description: ''
+          type: integer
+          format: int32
+        TYPE:
+          description: ''
+          type: string
+        TREE_CODE:
+          description: ''
+          type: string
+        LABEL:
+          description: ''
+          type: string
+    MASTERCLIENTINFO:
+      title: MASTER_CLIENT_INFO
+      type: object
+      properties:
+        PARTY_ID:
+          description: ''
+          type: integer
+          format: int32
+        AMC_PARTY_ID:
+          description: ''
+          type: integer
+          format: int32
+        AMC_PARTY_NUMBER:
+          description: ''
+          type: integer
+          format: int32
+        AMC_PARTY_NAME:
+          description: ''
+          type: string
+        LVL:
+          description: ''
+          type: integer
+          format: int32
+    CSCRunReportResponse:
+      title: CSCRunReportResponse
+      type: object
+      properties:
+        runReportResponse:
+          $ref: '#/components/schemas/CSCRunReportReturn'
+      required:
+        - runReportReturn
+    CSCRunReportReturn:
+      title: CSCRunReportReturn
+      type: object
+      properties:
+        runReportReturn:
+          $ref: '#/components/schemas/CSCReportBytes'
+    CSCReportBytes:
+      title: CSCReportBytes
+      type: object
+      properties:
+        reportBytes:
+          $ref: '#/components/schemas/CSCDATA_DS'
+        P_PARTY_NAME:
+          type: string
+    CSCDATA_DS:
+      title: CSCDATA_DS
+      type: object
+      properties:
+        DATA_DS:
+          description: ''
+          type: array
+          items:
+            $ref: '#/components/schemas/CSCG1'
+    CSCG1:
+      title: CSCG1
+      type: object
+      properties:
+        G_1:
+          $ref: '#/components/schemas/CSCData'
+    CSCData:
+      title: CSCData
+      type: object
+      properties:
+        CSC_PARTY_NUMBER:
+          type: integer
+          format: int32
+        CSC_PARTY_ID:
+          type: integer
+          format: int32
+        CSC_NAME:
+          type: string
+        CSC_APPROVED_FLAG:
+          type: string

@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Taxonomy Service"
+  description: "Set of services related to CDM Taxonomy Industry Practices"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Taxonomy Service"
+    description: "CDM Taxonomy Service APIs"
+paths:
+  /taxonomyservice/getTaxonomyIndustries:
+    get:
+      tags:
+        - CDM Taxonomy Service
+      summary: Get All Taxonomy Industries from CDM
+      description: Retrieve master list of all the Taxonomy Industry Practices
+      operationId: getTaxonomyIndustries
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxonomyIndustriesResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /taxonomyservice/getTaxonomyIndustryById/{taxonomy_industry_id}:
+    get:
+      tags:
+        - CDM Taxonomy Service
+      summary: Get Taxonomy Industry by ID from CDM
+      description: Retrieve the Taxonomy Industry Practice by Id
+      operationId: getTaxonomyIndustryById
+      parameters:
+        - name: taxonomy_industry_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Taxonomy Industry Id present in CDM'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxonomyIndustry'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+
+components:
+  schemas:
+    TaxonomyIndustriesResponse:
+      title: TaxonomyIndustriesResponse
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxonomyIndustry'
+        count:
+          type: integer
+          format: int32
+        hasMore:
+          type: boolean
+        limit:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int32
+
+    TaxonomyIndustry:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+        RecordName:
+          type: string
+        CreatedBy:
+          type: string
+        CreationDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        LastUpdateDate:
+          type: string
+        RecordNumber:
+          type: integer
+          format: int32
+        LastUpdateLogin:
+          type: string
+        UserLastUpdateDate:
+          type: string
+        ConflictId:
+          type: integer
+          format: int32
+        CurrencyCode:
+          type: string
+        CurcyConvRateType:
+          type: string
+        CorpCurrencyCode:
+          type: string
+        OraZcxOwner_Id_c:
+          type: integer
+          format: int32
+        OraZcxOwner_c:
+          type: string
+        ParentTaxonomyIndustryId_c:
+          type: integer
+          format: int32
+        SelectedRow:
+          type: string
+        TaxonomyIndustryName_c:
+          type: string
+        TaxonomyIndustryShortName_c:
+          type: string
+        TaxonomyPoolPartyURI_c:
+          type: string

@@ -1,0 +1,774 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Custom Reference Service"
+  description: "Set of services related to CDM custom references operations"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Custom Reference Service"
+    description: "CDM Custom Reference Service APIs"
+paths:
+
+  /customreferenceservice/cstleaders/{cstleader_id}:
+    get:
+      tags:
+        - CDM Custom Reference Service
+      summary: Fetch CST leader tags' details for an organization based on cst leader id
+      description: Retrieve CST leader tags' details for an organization based on cst leader id and fetch all Active and Inactive CST leader tags by include_inactive
+      operationId: getCSTLeaderTagDetailsByCSTLeader
+      parameters:
+        - name: cstleader_id
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'CST leader Id present in CDM'
+        - name: include_inactive
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'To include all CST Leaders in response from CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+    patch:
+      tags:
+        - CDM Custom Reference Service
+      summary: Update CST leader into CDM
+      description: Update CST leader information by Payload with CST Leader id as param
+      operationId: updateCstLeaders
+      parameters:
+        - name: cstleader_id
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'CST leader Id present in CDM'
+      requestBody:
+        description: Update request for CST Leader in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                overallFlag:
+                  type: boolean
+                  example: true
+                currentUserFMNO:
+                  type: integer
+                  format: int32
+                  example: 132345
+                currentUserName:
+                  type: string
+                  example: "Tom Cruise"
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+    delete:
+      tags:
+        - CDM Custom Reference Service
+      summary: Delete CST leader from CDM
+      description: Delete CST leader information by Payload with CST Leader id as param
+      operationId: deleteCstLeaders
+      parameters:
+        - name: cstleader_id
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'CST leader Id present in CDM'
+        - name: currentUserFMNO
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'FMNO of the user initiated the request.'
+        - name: currentUserName
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'Username of the user initiated the request.'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /customreferenceservice/cstleaders:
+    get:
+      tags:
+        - CDM Custom Reference Service
+      summary: Fetch CST leader details based on party id
+      description: Retrieve CST leader details based on party id and fetch all Active and Inactive CST leaders by include_inactive
+      operationId: getCSTLeaderDetailsByPartyId
+      parameters:
+        - name: party_id
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 100000003649379
+          description: 'Party Id present in CDM'
+        - name: include_inactive
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'To include all CST Leaders in response from CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+    post:
+      tags:
+        - CDM Custom Reference Service
+      summary: Create CST leader into CDM
+      description: Create CST leader for an organization by Payload
+      operationId: createCstLeaders
+      requestBody:
+        description: Create request for CST Leader in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                partyId:
+                  type: integer
+                  format: int32
+                  example: 300000013262282
+                leaderFMNO:
+                  type: integer
+                  format: int32
+                  example: 132345
+                overallFlag:
+                  type: boolean
+                  example: true
+                currentUserFMNO:
+                  type: integer
+                  format: int32
+                  example: 132345
+                currentUserName:
+                  type: string
+                  example: "Tom Cruise"
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /customreferenceservice/cstleaders/{cstleader_id}/tags:
+    post:
+      tags:
+        - CDM Custom Reference Service
+      summary: Create CST leader tag into CDM
+      description: Create CST leader tag for an cst leader by Payload and leader id.
+      operationId: createCstLeadersTag
+      parameters:
+        - name: cstleader_id
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'CST leader Id present in CDM'
+      requestBody:
+        description: Create request for CST Leader Tag in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cstLeaderId:
+                  type: integer
+                  format: int32
+                  example: 300000013262282
+                entityType:
+                  type: string
+                  example: "TaxonomyIndustries_c"
+                MCK_MIC_SECTOR_c:
+                  type: integer
+                  format: int32
+                  example: 300000161488338
+                MCK_MIC_INDUSTRY_c:
+                  type: integer
+                  format: int32
+                  example: 300000160483258
+                MCK_MIC_INDUSTRY_SEGMENT_c:
+                  type: integer
+                  format: int32
+                  example: 300000160483258
+                MCK_MIC_INDUSTRY_SUBSEGMENT_c:
+                  type: integer
+                  format: int32
+                  example: 300000160483258
+                currentUserFMNO:
+                  type: integer
+                  format: int32
+                  example: 12345
+                currentUserName:
+                  type: string
+                  example: "Christian Bale"
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MergeCSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+    delete:
+      tags:
+        - CDM Custom Reference Service
+      summary: Delete CST leader tag from CDM
+      description: Delete CST leader tag from CDM by Id
+      operationId: deleteCstLeadersTag
+      parameters:
+        - name: cstleader_id
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'CST leader Id present in CDM'
+        - name: tag_id
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'CST leader tag Id present in CDM'
+        - name: currentUserFMNO
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 12345
+          description: 'FMNO of the user initiated the request.'
+        - name: currentUserName
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'Username of the user initiated the request.'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCSTLeadersResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /customreferenceservice/prioritytags:
+    get:
+      tags:
+        - Priority Tag Service
+      summary: Fetch All Priority Tags
+      description: Retrieve All Priority Tags details and fetch all Active and Inactive Priority Tags by include_inactive with limit and offset
+      operationId: getPriorityTags
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 10
+          description: 'Maximum number of items that may be returned for a single request'
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 2
+          description: 'Starting point within the collection of results'
+        - name: include_inactive
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'To include all Priority Tags in response from CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityTags'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+    post:
+      tags:
+        - Priority Tag Service
+      summary: Create Priority Tag
+      description: Create Priority Tag in CDM
+      operationId: createPriorityTag
+      requestBody:
+        description: Create Priority Tag in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ sequenceNumber, name ]
+              properties:
+                sequenceNumber:
+                  type: number
+                  description: Priority tag sequence number.
+                name:
+                  type: string
+                  description: Priority tag name.
+                description:
+                  type: string
+                  description: Priority tag description.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityTag'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /customreferenceservice/prioritytags/{priorityTagId}:
+    get:
+      tags:
+        - Priority Tag Service
+      summary: Fetch Priority Tag By Id
+      description: Retrieve Active and Inactive Priority Tag details include_inactive
+      operationId: getPriorityTagsById
+      parameters:
+        - name: include_inactive
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'To include all Priority Tags in response from CDM'
+        - name: priorityTagId
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'Priority Tag Id present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityTags'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+    delete:
+      tags:
+        - Priority Tag Service
+      summary: Delete Priority Tag of given Id
+      description: Delete Priority Tag in CDM
+      operationId: deletePriorityTag
+      parameters:
+        - name: priorityTagId
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'Priority Tag Id present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityTags'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+    patch:
+      tags:
+        - Priority Tag Service
+      summary: Update Priority Tag of given Id
+      description: Update Priority Tag in CDM
+      operationId: updatePriorityTag
+      parameters:
+        - name: priorityTagId
+          in: path
+          required: true
+          schema:
+            type: number
+            example: 300000017627205
+          description: 'Priority Tag Id present in CDM'
+      requestBody:
+        description: Update Priority Tag in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Priority tag name.
+                description:
+                  type: string
+                  description: Priority tag description.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityTag'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    PriorityTags:
+      type: array
+      items:
+        $ref: '#/components/schemas/PriorityTag'
+    PriorityTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        sequenceNumber:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        effectiveFrom:
+          type: string
+        effectiveTill:
+          type: string
+
+    CSTLeadersResponse:
+      title: CSTLeadersResponse
+      type: object
+      properties:
+        findEntityResponse:
+          $ref: '#/components/schemas/FindEntityResponse'
+      required:
+        - findEntityResponse
+    CreateCSTLeadersResponse:
+      title: CreateCSTLeadersResponse
+      type: object
+      properties:
+        createEntityResponse:
+          $ref: '#/components/schemas/SingleEntityResponse'
+      required:
+        - createEntityResponse
+    UpdateCSTLeadersResponse:
+      title: UpdateCSTLeadersResponse
+      type: object
+      properties:
+        updateEntityResponse:
+          $ref: '#/components/schemas/SingleEntityResponse'
+      required:
+        - updateEntityResponse
+    MergeCSTLeadersResponse:
+      title: MergeCSTLeadersResponse
+      type: object
+      properties:
+        mergeEntityResponse:
+          $ref: '#/components/schemas/SingleEntityResponse'
+      required:
+        - mergeEntityResponse
+    SingleEntityResponse:
+      title: CSTLeadersEntity
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/CSTLeadersResultItem'
+      required:
+        - CSTLeadersResult
+    FindEntityResponse:
+      title: CSTLeadersEntity
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/Result'
+      required:
+        - CSTLeadersResult
+    Result:
+      title: CSTLeadersResult
+      type: array
+      items:
+        $ref: '#/components/schemas/CSTLeadersResultItem'
+      required:
+        - CSTLeadersResultItem
+    CSTLeadersResultItem:
+      title: CSTLeadersResultItem
+      type: object
+      properties:
+        '@type':
+          type: string
+          example: 'ns1:MCK_CSTLeader_c'
+        Id:
+          type: integer
+          format: int32
+        RecordName:
+          type: string
+        CreatedBy:
+          type: string
+        CreationDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        LastUpdateDate:
+          type: string
+        ObjectVersionNumber:
+          type: integer
+        RecordNumber:
+          type: integer
+        LastUpdateLogin:
+          type: string
+        UserLastUpdateDate:
+          $ref: '#/components/schemas/NullObject'
+        CurrencyCode:
+          type: string
+        CurcyConvRateType:
+          type: string
+        CorpCurrencyCode:
+          type: string
+        OraZcxOwner_Id_c:
+          type: integer
+          format: int32
+        OraZcxOwner_c:
+          type: string
+        MCK_Account_c:
+          type: string
+        MCK_LeaderFMNO_c:
+          type: integer
+        MCK_OverallFlag_c:
+          type: boolean
+        MCK_EffectiveStartDate_c:
+          type: string
+        MCK_EffectiveEndDate_c:
+          type: string
+        MCK_CreatedByFMNO_c:
+          type: integer
+        MCK_CreatedByName_c:
+          type: string
+        MCK_UpdatedByFMNO_c:
+          type: integer
+        MCK_UpdatedByName_c:
+          type: string
+        CSTLeaderTagCollection_c:
+          $ref: '#/components/schemas/CSTLeaderTagCollection'
+        MCK_PartyId_c:
+          type: string
+    NullObject:
+      title: NullObject
+      type: object
+      properties:
+        '@nil':
+          type: boolean
+        Text:
+          type: string
+    CSTLeaderTagCollection:
+      title: CSTLeaderTagCollection
+      type: array
+      items:
+        $ref: '#/components/schemas/CSTLeaderTagCollectionItem'
+    CSTLeaderTagCollectionItem:
+      title: CSTLeaderTagCollectionItem
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+        RecordName:
+          type: string
+        CreatedBy:
+          type: string
+        CreationDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        LastUpdateDate:
+          type: string
+        ObjectVersionNumber:
+          type: integer
+        RecordNumber:
+          type: integer
+        MCK_CSTLeader_Id_c:
+          type: integer
+          format: int32
+        LastUpdateLogin:
+          $ref: '#/components/schemas/NullObject'
+        UserLastUpdateDate:
+          $ref: '#/components/schemas/NullObject'
+        CurrencyCode:
+          type: string
+        CurcyConvRateType:
+          type: string
+        CorpCurrencyCode:
+          type: string
+          format: int32
+        MCK_EntityType_c:
+          type: string
+        MCK_EffectiveStartDate_c:
+          type: string
+        MCK_EffectiveEndDate_c:
+          type: string
+        MCK_CreatedByFMNO_c:
+          type: integer
+        MCK_CreatedByName_c:
+          type: string
+        MCK_UpdatedByFMNO_c:
+          type: integer
+        MCK_UpdatedByName_c:
+          type: string
+        MCK_MIC_SECTOR_c:
+          type: string
+        MCK_MIC_INDUSTRY_c:
+          type: string
+        MCK_MIC_INDUSTRY_SEGMENT_c:
+          type: string
+        MCK_MIC_INDUSTRY_SUBSEGMENT_c:
+          type: string

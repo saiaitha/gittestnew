@@ -1,0 +1,996 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Services"
+  description: "Set of services related to CDM Clients"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Services"
+    description: "CDM Client Services APIs"
+paths:
+  /cdm-services/v2/clients/{party_id}:
+    get:
+      tags:
+        - CDM Services
+      summary: Fetch Client's Data V2 by CDM Party ID
+      description: This V2 API is to Fetch Clients Data by CDM Party ID
+      operationId: clientsV2
+      parameters:
+        - name: party_id
+          in: path
+          required: true
+          schema:
+            type: number
+          description: 'Party Id present in CDM'
+        - name: include_parent
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'Include AMC Info present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getClientV2'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cdm-services/getClient:
+    get:
+      tags:
+        - CDM Services
+      summary: Fetch Client's Data or Create a Client in CDM.
+      description: This API is used to Fetch Client's Data by CDM Party ID or Create a Client in CDM using CAPIQ Id as source
+      operationId: getClient
+      parameters:
+        - name: party_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'Party Id present in CDM or CAPIQ ID if source is capIQ'
+        - name: search_existing
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'Returns an existing client from CDM'
+        - name: source
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'To check whether creation request or fetch'
+        - name: billingOffice
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'Billing Office code. Default NYO.'
+        - name: created_by_fmno
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'Request user FMNO'
+        - name: created_by_email
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 'Request user EMAIL'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getClientV2'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cdm-services/createClient:
+    post:
+      tags:
+        - CDM Services
+      summary: Create a new client in CDM
+      description: This API is used to Create Clients into CDM with Different payloads
+      operationId: createClient
+      requestBody:
+        description: Create request for a Party in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ OrganizationName ]
+              properties:
+                OrganizationName:
+                  type: string
+                BiilingOffice:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    country:
+                      type: string
+                      example: "US"
+                      description: Country code.
+                    address1:
+                      type: string
+                      example: "Address line 1"
+                      description: Address line 1.
+                    address2:
+                      type: string
+                      example: "Address line 2"
+                      description: Address line 2.
+                    address3:
+                      type: string
+                      example: "Address line 3"
+                      description: Address line 3.
+                    address4:
+                      type: string
+                      example: "Address line 4"
+                      description: Address line 4.
+                    city:
+                      type: string
+                      example: "San Francisco"
+                      description: City.
+                    state:
+                      type: string
+                      example: "California"
+                      description: State.
+                    potsalcode:
+                      type: string
+                      example: "201301"
+                      description: Zip code.
+                    province:
+                      type: string
+                      example: "East"
+                      description: Province.
+                    county:
+                      type: string
+                      example: "North"
+                      description: County.
+                    CreatedByModule:
+                      type: string
+                      example: "MCK_EBS"
+                      description: Module.
+                created_by_fmno:
+                  type: string
+                created_by_email:
+                  type: string
+                contactPerson:
+                  type: object
+                  properties:
+                    PersonFirstName:
+                      type: string
+                    PersonLastName:
+                      type: string
+                    EmailAddress:
+                      type: string
+                pitchbookId:
+                  type: string
+                capIQId:
+                  type: string
+                searchExisting:
+                  type: boolean
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createClient'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cdm-services/v2/clients:
+    post:
+      tags:
+        - CDM Services
+      summary: Create a new client in CDM
+      description: This API is used to Create Clients into CDM with Different payloads
+      operationId: createClientV2
+      requestBody:
+        description: Create request for a Party in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ OrganizationName ]
+              properties:
+                OrganizationName:
+                  type: string
+                BiilingOffice:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    country:
+                      type: string
+                      example: "US"
+                      description: Country code.
+                    address1:
+                      type: string
+                      example: "Address line 1"
+                      description: Address line 1.
+                    address2:
+                      type: string
+                      example: "Address line 2"
+                      description: Address line 2.
+                    address3:
+                      type: string
+                      example: "Address line 3"
+                      description: Address line 3.
+                    address4:
+                      type: string
+                      example: "Address line 4"
+                      description: Address line 4.
+                    city:
+                      type: string
+                      example: "San Francisco"
+                      description: City.
+                    state:
+                      type: string
+                      example: "California"
+                      description: State.
+                    potsalcode:
+                      type: string
+                      example: "201301"
+                      description: Zip code.
+                    province:
+                      type: string
+                      example: "East"
+                      description: Province.
+                    county:
+                      type: string
+                      example: "North"
+                      description: County.
+                    CreatedByModule:
+                      type: string
+                      example: "MCK_EBS"
+                      description: Module.
+                created_by_fmno:
+                  type: string
+                created_by_email:
+                  type: string
+                contactPerson:
+                  type: object
+                  properties:
+                    PersonFirstName:
+                      type: string
+                    PersonLastName:
+                      type: string
+                    EmailAddress:
+                      type: string
+                pitchbookId:
+                  type: string
+                capIQId:
+                  type: string
+                searchExisting:
+                  type: boolean
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createClient'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    createClient:
+      title: createClient
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            "@type":
+              type: string
+              example: "ns2:OrganizationPartyResult"
+            Value:
+              type: object
+              properties:
+                PartyNumber:
+                  type: integer
+                  example: 223415
+                PartyId:
+                  type: integer
+                  example: 300000013262282
+                PartyType:
+                  type: string
+                PartyName:
+                  type: string
+                LastUpdatedBy:
+                  type: string
+                ValidatedFlag:
+                  type: object
+                LastUpdateLogin:
+                  type: string
+                CreationDate:
+                  type: string
+                RequestId:
+                  type: integer
+                LastUpdateDate:
+                  type: string
+                CreatedBy:
+                  type: string
+                OrigSystemReference:
+                  type: integer
+                HQBranchIndicator:
+                  type: object
+                DUNSNumberC:
+                  type: object
+                SICCode:
+                  type: object
+                JgzzFiscalCode:
+                  type: object
+                Address1:
+                  type: string
+                Country:
+                  type: string
+                Address3:
+                  type: object
+                GroupType:
+                  type: object
+                Address2:
+                  type: string
+                Address4:
+                  type: object
+                Status:
+                  type: string
+                City:
+                  type: string
+                PostalCode:
+                  type: integer
+                County:
+                  type: object
+                YearEstablished:
+                  type: object
+                Province:
+                  type: object
+                State:
+                  type: string
+                URL:
+                  type: object
+                AnalysisFy:
+                  type: object
+                SICCodeType:
+                  type: object
+                EmailAddress:
+                  type: object
+                FiscalYearendMonth:
+                  type: object
+                EmployeesTotal:
+                  type: object
+                CurrentFiscalYearPotentialRevenueAmount:
+                  type: object
+                NextFyPotentialRevenueAmount:
+                  type: object
+                GSAIndicatorFlag:
+                  type: object
+                CategoryCode:
+                  type: object
+                LanguageName:
+                  type: object
+                MissionStatement:
+                  type: object
+                ThirdPartyFlag:
+                  type: object
+                HomeCountry:
+                  type: object
+                CreatedByModule:
+                  type: string
+                ObjectVersionNumber:
+                  type: integer
+                CertificationLevel:
+                  type: object
+                CertReasonCode:
+                  type: object
+                PrimaryPhonePurpose:
+                  type: object
+                PrimaryPhoneContactPointId:
+                  type: object
+                PrimaryPhoneLineType:
+                  type: object
+                PrimaryPhoneCountryCode:
+                  type: object
+                PrimaryPhoneAreaCode:
+                  type: object
+                PrimaryPhoneNumber:
+                  type: object
+                PreferredContactMethod:
+                  type: object
+                PrimaryPhoneExtension:
+                  type: object
+                IdenAddrLocationId:
+                  type: integer
+                PrimaryURLContactPointId:
+                  type: object
+                PrimaryEmailContactPointId:
+                  type: object
+                IdenAddrPartySiteId:
+                  type: integer
+                PreferredName:
+                  type: object
+                PersonSecondLastName:
+                  type: object
+                PreferredNameId:
+                  type: object
+                TradingPartnerIdentifier:
+                  type: object
+                PreferredContactPersonId:
+                  type: integer
+                PreferredFunctionalCurrency:
+                  type: object
+                InternalFlag:
+                  type: "boolean"
+                Comments:
+                  type: string
+                CeoName:
+                  type: object
+                PrincipalName:
+                  type: object
+                OrganizationSize:
+                  type: object
+                PartyUniqueName:
+                  type: string
+                SourceSystem:
+                  type: object
+                SourceSystemReferenceValue:
+                  type: object
+                SourceSystemUpdateDate:
+                  type: object
+
+                OrganizationProfile:
+                  $ref: '#/components/schemas/OrganizationProfile'
+          required:
+            - "@type"
+            - Value
+      required:
+        - result
+
+    OrganizationProfile:
+      title: OrganizationProfile
+      type: object
+      properties:
+        '@prefix':
+          description: ''
+          type: string
+        OrganizationName:
+          description: ''
+          type: string
+        CreatedByModule:
+          description: ''
+          type: string
+        OrigSystem:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: string
+        OrganizationProfileId:
+          type: integer
+        PartyId:
+          type: integer
+        EnquiryDUNS:
+          type: object
+        CeoName:
+          type: object
+        CeoTitle:
+          type: object
+        PrincipalName:
+          type: object
+        PrincipalTitle:
+          type: object
+        LegalStatus:
+          type: object
+        ControlYr:
+          type: object
+        EmployeesTotal:
+          type: object
+        HQBranchIndicator:
+          type: object
+        BranchFlag:
+          type: object
+        OobInd:
+          type: object
+        LineOfBusiness:
+          type: object
+        CongDistCode:
+          type: object
+        ImportInd:
+          type: object
+        ExportInd:
+          type: object
+        LaborSurplusInd:
+          type: object
+        MinorityOwnedInd:
+          type: object
+        MinorityOwnedType:
+          type: object
+        WomanOwnedInd:
+          type: object
+        Disadv8aInd:
+          type: object
+        SmallBusInd:
+          type: object
+        RentOwnInd:
+          type: object
+        DbRating:
+          type: object
+        GSAIndicatorFlag:
+          type: object
+        JgzzFiscalCode:
+          type: object
+        AnalysisFy:
+          type: object
+        FiscalYearendMonth:
+          type: object
+        CurrentFiscalYearPotentialRevenueAmount:
+          type: object
+        NextFyPotentialRevenueAmount:
+          type: object
+        YearEstablished:
+          type: object
+        MissionStatement:
+          type: object
+        OrganizationType:
+          type: object
+        BusinessScope:
+          type: object
+        CorporationClass:
+          type: object
+        LocalBusIdenType:
+          type: object
+        LocalBusIdentifier:
+          type: object
+        PreferredFunctionalCurrency:
+          type: object
+        RegistrationType:
+          type: object
+        TotalEmployeesText:
+          type: object
+        TotalEmployeesInd:
+          type: object
+        TotalEmployeesEstimatedIndicator:
+          type: object
+        TotalEmployeesMinimumIndicator:
+          type: object
+        ParentSubInd:
+          type: object
+        IncorpYear:
+          type: object
+        LastUpdateDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        CreationDate:
+          type: string
+        CreatedBy:
+          type: string
+        LastUpdateLogin:
+          type: string
+        RequestId:
+          type: integer
+        ContentSourceNumber:
+          type: object
+        EffectiveStartDate:
+          type: string
+        EffectiveEndDate:
+          type: string
+        PublicPrivateOwnershipFlag:
+          type: object
+        LocalActivityCodeType:
+          type: object
+        LocalActivityCode:
+          type: object
+        EmployeesAtPrimaryAddress:
+          type: object
+        EmployeesAtPrimaryAddressText:
+          type: object
+        EmployeesAtPrimaryAddressEstimation:
+          type: object
+        EmployeesAtPrimaryAddressMinimum:
+          type: object
+        InternalFlag:
+          type: "boolean"
+        TotalPaymentAmount:
+          type: object
+        DisplayedDUNSPartyIdentifier:
+          type: object
+        Status:
+          type: string
+        BusinessReport:
+          type: object
+        DUNSNumberC:
+          type: object
+        BankOrBranchNumber:
+          type: object
+        BankCode:
+          type: object
+        BranchCode:
+          type: object
+        DoNotConfuseWith:
+          type: object
+        HomeCountry:
+          type: object
+        GrowthStrategyDescription:
+          type: object
+        SeblUserKeyLoc:
+          type: object
+        StockSymbol:
+          type: object
+        TradingPartnerIdentifier:
+          type: object
+        EffectiveSequence:
+          type: integer
+        Comments:
+          type: string
+        EffectiveLatestChange:
+          type: string
+        OrganizationSize:
+          type: object
+        SuffixOverriddenFlag:
+          type: "boolean"
+        UniqueNameAlias:
+          type: string
+        UniqueNameSuffix:
+          type: object
+        DomesticUltimateDUNSNumberC:
+          type: object
+        GlobalUltimateDUNSNumberC:
+          type: object
+        ParentDUNSNumberC:
+          type: object
+        CorpCurrencyCode:
+          type: string
+        CurcyConvRateType:
+          type: string
+        CurrencyCode:
+          type: string
+        PartyNumber:
+          type: integer
+        CertificationLevel:
+          type: object
+        CertReasonCode:
+          type: object
+        PreferredContactMethod:
+          type: object
+        PreferredContactPersonId:
+          type: object
+        PreferredContactName:
+          type: object
+        PreferredContactEmailAddress:
+          type: object
+        PreferredContactFormattedPhoneNumber:
+          type: object
+        PrimaryAddressLine1:
+          type: string
+        PrimaryAddressLine2:
+          type: string
+        PrimaryAddressLine3:
+          type: object
+        PrimaryAddressLine4:
+          type: object
+        Alias:
+          type: object
+        PrimaryAddressCity:
+          type: string
+        PrimaryAddressCountry:
+          type: string
+        PrimaryAddressCounty:
+          type: object
+        PrimaryEmailAddress:
+          type: object
+        PrimaryFormattedPhoneNumber:
+          type: object
+        IdenAddrLocationId:
+          type: integer
+        IdenAddrPartySiteId:
+          type: integer
+        PrimaryLanguage:
+          type: object
+        PartyUniqueName:
+          type: string
+        PrimaryAddressPostalCode:
+          type: integer
+        PreferredName:
+          type: object
+        PreferredNameId:
+          type: object
+        PrimaryEmailId:
+          type: object
+        PrimaryPhoneAreaCode:
+          type: object
+        PrimaryPhoneId:
+          type: object
+        PrimaryPhoneCountryCode:
+          type: object
+        PrimaryPhoneExtension:
+          type: object
+        PrimaryPhoneLineType:
+          type: object
+        PrimaryPhoneNumber:
+          type: object
+        PrimaryPhonePurpose:
+          type: object
+        PrimaryWebId:
+          type: object
+        Pronunciation:
+          type: object
+        PrimaryAddressProvince:
+          type: object
+        SICCode:
+          type: object
+        SICCodeType:
+          type: object
+        PrimaryAddressState:
+          type: string
+        PrimaryURL:
+          type: object
+        ValidatedFlag:
+          type: object
+        ThirdPartyFlag:
+          type: object
+        LastUpdateSourceSystem:
+          type: string
+        LastSourceUpdateDate:
+          type: string
+        DataCloudStatus:
+          type: object
+        LastEnrichmentDate:
+          type: object
+        MCK_HasMSA_c:
+          type: "boolean"
+        MCK_PaymentTerms_c:
+          type: object
+        MCK_SpecialDLPHandling_c:
+          type: "boolean"
+        MCK_PrimaryFormOfOwnership_c:
+          type: string
+        MCK_StateOwnedEnterprise_c:
+          type: "boolean"
+        MCK_Sanctioned_c:
+          type: "boolean"
+        MCK_InvestmentServices_c:
+          type: "boolean"
+        MCK_ClientSize_c:
+          type: object
+        MCK_ClientSizeMeasure_c:
+          type: object
+        MCK_ClientSizeMeasureCurr_Id_c:
+          type: object
+        MCK_ClientSizeMeasureCurr_c:
+          type: object
+        MCK_ClientSizeYear_c:
+          type: object
+        MCK_ClientSizeSource_c:
+          type: object
+        MCK_ClientSizeUSD_c:
+          type: object
+        MCK_COMStatus_c:
+          type: string
+        MCK_PriorityQualifier_c:
+          type: object
+        MCK_ReviewStatus_c:
+          type: string
+        MCK_AccountingClientCode_c:
+          type: object
+        MCK_ClientSizeTier_c:
+          type: string
+        MCK_EnrichedName_c:
+          type: object
+        MCK_PracticeIndustry_c:
+          type: object
+        MCK_MainPracticeIndustry_c:
+          type: object
+        MCK_COMStatusDetails_c:
+          type: object
+        MCK_ESMAStatus_Value_c:
+          type: string
+        MultiClient_c:
+          type: "boolean"
+        MCK_RebateAgreement_c:
+          type: string
+        MCK_Location_c:
+          type: string
+        MCK_Office_c:
+          type: string
+        MCK_Region_c:
+          type: string
+        MCK_CreatedByApp_c:
+          type: string
+        Ambiguous_c:
+          type: string
+        ReportingLabel_c:
+          type: string
+        AMCAccount_c:
+          type: string
+        AnticipatedMasterClientID_c:
+          type: integer
+        CAPIQId_c:
+          type: integer
+        DataQualityOverride_c:
+          type: "boolean"
+        SourceSystem_c:
+          type: object
+        DataQualityIssues_c:
+          type: string
+        UltimateParentID_c:
+          type: object
+        ParentAccountID_c:
+          type: object
+        CAPIQIDcreate_c:
+          type: object
+        CapIqIDdetails_c:
+          type: string
+        MCK_CreatedByEmail_c:
+          type: object
+        MCK_CreatedByFMNO_c:
+          type: object
+        AMC_c:
+          type: integer
+        WinnerPartyNumber_c:
+          type: object
+        WinnerPartyId_c:
+          type: object
+        CombinedURLs_c:
+          type: string
+        MCK_EkamReview_c:
+          type: string
+        MainParentLabel_c:
+          type: object
+        MainParent_c:
+          type: object
+        WinnerPartyName_c:
+          type: object
+        ParentAccountName_c:
+          type: object
+        UltimateParentName_c:
+          type: object
+        UltimateParentPartyId_c:
+          type: object
+        CapiqUltimateParentCDM_c:
+          type: integer
+      required:
+        - '@prefix'
+        - OrganizationName
+        - CreatedByModule
+        - OrigSystem
+        - OrigSystemReference
+
+    getClientV2:
+      title: getClientV2
+      type: object
+      properties:
+        PartyId:
+          description: ''
+          type: integer
+          format: int32
+        PartyName:
+          description: ''
+          type: string
+        PartyNumber:
+          description: ''
+          type: integer
+          format: int32
+        FormattedAddress:
+          description: ''
+          type: string
+        OfficeCode:
+          description: ''
+          type: string
+        City:
+          description: ''
+          type: string
+        Country:
+          description: ''
+          type: string
+        MainPractice:
+          description: ''
+          type: string
+        MSA_Flag:
+          description: ''
+          type: string
+        SOE_FLAG:
+          description: ''
+          type: string
+        PartySites:
+          description: ''
+          type: string
+        CreatedByApp:
+          description: ''
+          type: string
+        CreatedByFMNO:
+          description: ''
+          type: string
+        CreatedByEmail:
+          description: ''
+          type: string
+        ReviewStatus:
+          description: ''
+          type: string
+        ESMAStatus:
+          description: ''
+          type: string
+        parentCompany:
+          description: ''
+          type: string
+        parentPartyId:
+          description: ''
+          type: integer
+          format: int32
+        parentPartyNumber:
+          description: ''
+          type: integer
+          format: int32
+        csc:
+          description: ''
+          type: string
+        ultimateCapiqParentPartyName:
+          description: ''
+          type: string
+        ultimateCapiqParentPartyNumber:
+          description: ''
+          type: integer
+          format: int32
+      required:
+        - PartyId
+        - PartyName
+        - PartyNumber
+        - FormattedAddress
+        - OfficeCode
+        - City
+        - Country
+        - MainPractice
+        - MSA_Flag
+        - SOE_FLAG
+        - PartySites
+        - CreatedByApp
+        - CreatedByFMNO
+        - CreatedByEmail
+        - ReviewStatus
+        - ESMAStatus

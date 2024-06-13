@@ -1,0 +1,676 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM CPA Service"
+  description: "Set of services related to CDM CPA operations"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM CPA Service"
+    description: "CDM CPA Service APIs"
+paths:
+  /cpaservices/v2/companies:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: Fetch CPAT data based on company id, name and limit
+      description: Retrieve CPA records by company id, name and limit
+      operationId: v2companiesCPA
+      parameters:
+        - name: company_id
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Company Id present in CPA'
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'Name present in CPA'
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: 'No of records in CPA'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPAV2Companies'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices/{capIQId}:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: Fetch CPAT metadata based on capiq id
+      description: Retrieve CPA metadata by capiq id
+      operationId: getCPAbyCapiqId
+      parameters:
+        - name: capIQId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Capiq Id present in CPA'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPAMetadata'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: Fetch CPAT data based on capiq id
+      description: Retrieve CPA data by capiq id
+      operationId: "getCompanyInfoCPA"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "company_id"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CPAItemData"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices/classification:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: "Get classification"
+      description: "Get classification"
+      operationId: "getClassificationInfoCPA"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ClassificationData"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices/v2/companies/tree/{company_id}:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: "Get CPA Tree Information"
+      description: "Get CPA Tree Information"
+      operationId: "getTreeInfoCAP"
+      parameters:
+        - name: "company_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+          description: 'Capiq Id present in CPA'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPATree'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices/v2/companies/parents/{company_id}:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: "Get CPA Parent Information"
+      description: "Get CPA Parent Information"
+      operationId: "getParentInfoCPA"
+      parameters:
+        - name: "company_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+          description: 'Capiq Id present in CPA'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPAParent'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices/v2/companies/financials/{company_id}:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: "Fetch CPA financials"
+      description: "Fetch CPA financials"
+      operationId: "getFinancialsInfoCPA"
+      parameters:
+        - name: "company_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+          description: 'Capiq Id present in CPA'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPAFinancials'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+  /cpaservices/v2/companies/boardex/{company_id}:
+    get:
+      tags:
+        - CDM CPA Service
+      summary: "Fetch CPA boardex"
+      description: "Fetch CPA boardex"
+      operationId: "getBoardexInfoCPA"
+      parameters:
+        - name: "company_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPABoardex'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    CPAMetadata:
+      title: CPAMetadata
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        uid:
+          type: integer
+        samples_count:
+          type: integer
+        country_code:
+          type: string
+        country_iso2_code:
+          type: string
+        country_inc_code:
+          type: string
+        address:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
+        description:
+          type: string
+        currency:
+          type: string
+        rating:
+          type: string
+        search:
+          type: string
+        short_name:
+          type: string
+        fax:
+          type: string
+        phone:
+          type: string
+        long_description:
+          type: string
+        max_fy:
+          type: string
+        min_fy:
+          type: string
+        max_fq:
+          type: string
+        min_fq:
+          type: string
+        max_ltm:
+          type: string
+        max_cy:
+          type: string
+        min_cy:
+          type: string
+        exchange:
+          type: string
+        ticker:
+          type: string
+        isin:
+          type: string
+        classification:
+          type: string
+        active:
+          type: boolean
+        public_id:
+          type: integer
+        ultimate_parent_company_id:
+          type: integer
+        parent:
+          type: boolean
+        financial_arm:
+          type: boolean
+        manually_adjusted:
+          type: string
+        datagrade:
+          type: integer
+        sector_geography:
+          type: string
+        year_founded:
+          type: integer
+        web_address:
+          type: string
+        reportDate:
+          type: string
+        level_one_id:
+          type: integer
+        level_two_id:
+          type: integer
+        level_three_id:
+          type: integer
+        level_four_id:
+          type: integer
+        sector:
+          type: string
+        group:
+          type: string
+        industry:
+          type: string
+        sub_industry:
+          type: string
+        sics:
+          type: integer
+        naics:
+          type: integer
+        sics_description:
+          type: string
+        naics_description:
+          type: string
+        market_cap:
+          type: string
+        share_price:
+          type: string
+        capiq_id:
+          type: integer
+        duns:
+          type: string
+        lei:
+          type: string
+        ultimate_parent_company_capiq_id:
+          type: integer
+        ultimate_parent_company_name:
+          type: string
+    CPAV2Companies:
+      title: CPAV2Companies
+      type: object
+      properties:
+        Limit:
+          description: ''
+          type: integer
+          format: int32
+        CPAV2CompaniesItem:
+          description: ''
+          type: array
+          items:
+            $ref: '#/components/schemas/CPAV2CompaniesItem'
+      required:
+        - Limit
+        - CPAV2CompaniesItem
+    CPAV2CompaniesItem:
+      title: Value
+      type: array
+      items:
+        properties:
+          CompanyName:
+            description: ''
+            type: string
+          WebAddress:
+            description: ''
+            type: string
+          Country:
+            description: ''
+            type: string
+          CountryCode:
+            description: ''
+            type: string
+          ShortDescription:
+            description: ''
+            type: string
+          LongDescription:
+            description: ''
+            type: string
+          UltimateParentCompanyId:
+            description: ''
+            type: integer
+            format: int32
+          companyId:
+            description: ''
+            type: integer
+            format: int32
+          IsPublic:
+            description: ''
+            type: boolean
+          IsParent:
+            description: ''
+            type: boolean
+          HasLongDescription:
+            description: ''
+            type: boolean
+          IsActive:
+            description: ''
+            type: boolean
+          MaxFq:
+            description: ''
+            type: string
+          MaxFy:
+            description: ''
+            type: string
+          DataGrade:
+            description: ''
+            type: integer
+            format: int32
+          Sector:
+            description: ''
+            type: string
+          Group:
+            description: ''
+            type: string
+          Industry:
+            description: ''
+            type: string
+          SubIndustry:
+            description: ''
+            type: string
+          Classification:
+            description: ''
+            type: string
+    CPAItemData:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        parent:
+          type: "boolean"
+        public:
+          type: "boolean"
+        uid:
+          type: "integer"
+          format: "int64"
+        active:
+          type: "boolean"
+        max_fq:
+          type: "string"
+        company_name:
+          type: "string"
+        web_address:
+          type: "string"
+        country:
+          type: "string"
+        country_code:
+          type: "string"
+        short_description:
+          type: "string"
+        long_description:
+          type: "string"
+        company_id:
+          type: "integer"
+          format: "int64"
+        ultimate_parent_company_id:
+          type: "integer"
+          format: "int64"
+        is_public:
+          type: "boolean"
+        is_parent:
+          type: "boolean"
+        has_long_description:
+          type: "boolean"
+        has_short_description:
+          type: "boolean"
+        is_active:
+          type: "boolean"
+        reporting_template:
+          type: "string"
+        max_fy:
+          type: "string"
+        datagrade:
+          type: "integer"
+          format: "int64"
+        pics_level_one_name:
+          type: "string"
+        pics_level_two_name:
+          type: "string"
+        pics_level_three_name:
+          type: "string"
+        pics_level_four_name:
+          type: "string"
+        sector:
+          type: "string"
+        group:
+          type: "string"
+        industry:
+          type: "string"
+        sub_industry:
+          type: "string"
+        classification:
+          type: "string"
+    ClassificationData:
+      description: ''
+      type: array
+      items:
+        $ref: '#/components/schemas/ClassificationItem'
+    ClassificationItem:
+      type: "object"
+      properties:
+        classification_id:
+          type: "string"
+        classification_name:
+          type: "string"
+        classification_level:
+          type: "string"
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassificationItem'
+    CPATree:
+      type: "object"
+      properties:
+        company_id:
+          type: "integer"
+          format: "int64"
+        company_name:
+          type: "string"
+        level:
+          type: "integer"
+          format: "int32"
+        rel_type_id:
+          type: "integer"
+          format: "int32"
+        rel_type_name:
+          type: "string"
+        child_companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CPATree'
+    CPAParent:
+      type: "object"
+      properties:
+        count:
+          type: "integer"
+          format: "int64"
+        response:
+          type: array
+          items:
+            $ref: '#/components/schemas/CPATreeItem'
+    CPATreeItem:
+      type: "object"
+      properties:
+        company_id:
+          type: "integer"
+          format: "int64"
+        company_name:
+          type: "string"
+        level:
+          type: "integer"
+          format: "int32"
+        rel_type_id:
+          type: "integer"
+          format: "int32"
+        rel_type_name:
+          type: "string"
+    CPAFinancials:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/CPAFinancialsItem'
+    CPAFinancialsItem:
+      type: "object"
+      properties:
+        marketcap_cy_pub:
+          type: array
+          items:
+            $ref: '#/components/schemas/CPAFinancialMarketCap'
+        revenues_usd_all:
+          type: array
+          items:
+            $ref: '#/components/schemas/CPAFinancialRevenue'
+    CPAFinancialMarketCap:
+      type: "object"
+      properties:
+        value:
+          type: "integer"
+          format: "int64"
+        date:
+          type: "string"
+        currency:
+          type: "string"
+    CPAFinancialRevenue:
+      type: "object"
+      properties:
+        value:
+          type: "integer"
+          format: "int64"
+        date:
+          type: "string"
+        sources:
+          type: array
+          items:
+            type: string
+    CPABoardex:
+      type: "object"
+      properties:
+        companyId:
+          type: array
+          items:
+            type: string

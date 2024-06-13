@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Group Service"
+  description: "Set of services related to CDM Groups operations"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Group Service"
+    description: "CDM Group Service APIs"
+paths:
+  /groupservice/findgroup:
+    get:
+      tags:
+        - CDM Group Service
+      summary: Fetch CDM Groups based on Party ID
+      description: Retrieve CDM Group records by party id
+      operationId: findGroup
+      parameters:
+        - name: party_id
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Party Id present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/findGroupResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    findGroupResponse:
+      title: FindGroupResponse
+      type: object
+      properties:
+        findGroupResponse:
+          $ref: '#/components/schemas/result'
+      required:
+        - result
+    result:
+      title: result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/Value'
+    Value:
+      title: Value
+      type: object
+      properties:
+        Value:
+          $ref: '#/components/schemas/Values'
+    Values:
+      title: Value
+      type: array
+      items:
+        properties:
+          PartyId:
+            description: ''
+            type: integer
+            format: int32
+          GroupName:
+            description: ''
+            type: string
+          GroupType:
+            description: ''
+            type: string
+          EffectiveStartDate:
+            description: ''
+            type: string
+          EffectiveEndDate:
+            description: ''
+            type: string
+          MCK_CSCApproved_c:
+            description: ''
+            type: boolean

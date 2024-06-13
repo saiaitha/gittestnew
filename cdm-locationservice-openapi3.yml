@@ -1,0 +1,791 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: "CDM Location Service"
+  description: "Set of services related to CDM Location(Address) operations"
+  termsOfService: ""
+  contact:
+    email: "CDM_Dev_Team_&_EWs@mckinsey.com"
+tags:
+  - name: "CDM Location Service"
+    description: "CDM Location Service APIs"
+paths:
+  /locationservice/createLocation:
+    post:
+      tags:
+        - CDM Location Service
+      summary: Create Location(Address) into CDM
+      description: Create an address in cdm
+      operationId: createLocation
+      requestBody:
+        description: Create request for Address in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [country, CreatedByModule]
+              properties:
+                country:
+                  type: string
+                  example: "US"
+                  description: Country code.
+                address1:
+                  type: string
+                  example: "Address line 1"
+                  description: Address line 1.
+                address2:
+                  type: string
+                  example: "Address line 2"
+                  description: Address line 2.
+                address3:
+                  type: string
+                  example: "Address line 3"
+                  description: Address line 3.
+                address4:
+                  type: string
+                  example: "Address line 4"
+                  description: Address line 4.
+                city:
+                  type: string
+                  example: "San Francisco"
+                  description: City.
+                state:
+                  type: string
+                  example: "California"
+                  description: State.
+                potsalcode:
+                  type: string
+                  example: "201301"
+                  description: Zip code.
+                province:
+                  type: string
+                  example: "East"
+                  description: Province.
+                county:
+                  type: string
+                  example: "North"
+                  description: County.
+                CreatedByModule:
+                  type: string
+                  example: "MCK_EBS"
+                  description: Module.
+                origsystem:
+                  type: string
+                  example: "EBS"
+                  description: Orig System.
+                origsystemreference:
+                  type: string
+                  example: "1000012223"
+                  description: Orig System Ref value.
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLocationResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+  /locationservice/getLocation:
+    get:
+      tags:
+        - CDM Location Service
+      summary: Get Location(Address) info from CDM
+      description: Get Location info from CDM
+      operationId: getLocation
+      parameters:
+        - name: location_id
+          in: query
+          required: true
+          schema:
+            type: number
+          description: 'Location Id present in CDM'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  getLocationResponse:
+                    type: object
+                    properties:
+                      result:
+                        type: object
+                        $ref: "#/components/schemas/GetLocationResult"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+  /locationservice/updateLocation:
+    post:
+      tags:
+        - CDM Location Service
+      summary: Update Location(Address) in CDM
+      description: Update an address in cdm
+      operationId: updateLocation
+      requestBody:
+        description: Update request for Address in CDM
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ LocationId ]
+              properties:
+                LocationId:
+                  type: number
+                  example: 300000161897512
+                  description: Location Id.
+                country:
+                  type: string
+                  example: "US"
+                  description: Country code.
+                address1:
+                  type: string
+                  example: "Address line 1"
+                  description: Address line 1.
+                address2:
+                  type: string
+                  example: "Address line 2"
+                  description: Address line 2.
+                address3:
+                  type: string
+                  example: "Address line 3"
+                  description: Address line 3.
+                address4:
+                  type: string
+                  example: "Address line 4"
+                  description: Address line 4.
+                city:
+                  type: string
+                  example: "San Francisco"
+                  description: City.
+                state:
+                  type: string
+                  example: "California"
+                  description: State.
+                potsalcode:
+                  type: string
+                  example: "201301"
+                  description: Zip code.
+                province:
+                  type: string
+                  example: "East"
+                  description: Province.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updateLocationResponse:
+                    type: object
+                    properties:
+                      result:
+                        type: object
+                        properties:
+                          att_type:
+                            type: string
+                          Value:
+                            type: object
+                            $ref: "#/components/schemas/UpdateLocationValue"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Failure
+
+components:
+  schemas:
+    CreateLocationResponse:
+      title: CreateLocationResponse
+      type: object
+      properties:
+        createLocationResponse:
+          $ref: '#/components/schemas/result'
+      required:
+        - result
+    result:
+      title: result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/Value'
+    Value:
+      title: Value
+      type: object
+      properties:
+        Value:
+          $ref: '#/components/schemas/Values'
+    Values:
+      title: Value
+      type: object
+      properties:
+        CreationDate:
+          description: ''
+          type: string
+        SalesTaxInsideCityLimits:
+          description: ''
+          type: integer
+        Latitude:
+          description: ''
+          type: string
+        StatusFlag:
+          description: ''
+          type: boolean
+        ShortDescription:
+          description: ''
+          type: string
+        ClliCode:
+          description: ''
+          type: string
+        DoNotValidateFlag:
+          description: ''
+          type: boolean
+        FaLocationId:
+          description: ''
+          type: integer
+        CreatedByModule:
+          description: ''
+          type: string
+        Distance:
+          description: ''
+          type: string
+        LastUpdatedBy:
+          description: ''
+          type: string
+        CreatedBy:
+          description: ''
+          type: string
+        RequestId:
+          description: ''
+          type: integer
+          format: int32
+        Position:
+          description: ''
+          type: string
+        ValidationStatusCode:
+          description: ''
+          type: integer
+        AddrElementAttribute5:
+          description: ''
+          type: string
+        City:
+          description: ''
+          type: string
+        AddrElementAttribute1:
+          description: ''
+          type: string
+        AddrElementAttribute2:
+          description: ''
+          type: string
+        Longitude:
+          description: ''
+          type: string
+        Province:
+          description: ''
+          type: string
+        AddrElementAttribute3:
+          description: ''
+          type: string
+        AddrElementAttribute4:
+          description: ''
+          type: string
+        ValidatedFlag:
+          description: ''
+          type: string
+        AddressEffectiveDate:
+          description: ''
+          type: string
+        PostalPlus4Code:
+          description: ''
+          type: string
+        LocationDirections:
+          description: ''
+          type: string
+        State:
+          description: ''
+          type: string
+        Country:
+          description: ''
+          type: string
+        OrigSystemReference:
+          description: ''
+          type: integer
+        LastUpdateLogin:
+          description: ''
+          type: string
+        Building:
+          description: ''
+          type: string
+        FloorNumber:
+          description: ''
+          type: string
+        TimezoneCode:
+          description: ''
+          type: string
+        Description:
+          description: ''
+          type: string
+        SalesTaxGeocode:
+          description: ''
+          type: string
+        PostalCode:
+          description: ''
+          type: string
+        County:
+          description: ''
+          type: string
+        OrigSystem:
+          description: ''
+          type: string
+        Language:
+          description: ''
+          type: string
+        ObjectVersionNumber:
+          description: ''
+          type: integer
+        HouseType:
+          description: ''
+          type: string
+        Address4:
+          description: ''
+          type: string
+        AddressLinesPhonetic:
+          description: ''
+          type: string
+        AddressStyle:
+          description: ''
+          type: string
+        DateValidated:
+          description: ''
+          type: boolean
+        Comments:
+          description: ''
+          type: string
+        LocationId:
+          description: ''
+          type: integer
+        Address2:
+          description: ''
+          type: string
+        Address3:
+          description: ''
+          type: string
+        AddressExpirationDate:
+          description: ''
+          type: string
+        InternalFlag:
+          description: ''
+          type: boolean
+        Address1:
+          description: ''
+          type: string
+        GeometryStatusCode:
+          description: ''
+          type: string
+        LastUpdateDate:
+          description: ''
+          type: string
+        EffectiveDate:
+          description: ''
+          type: string
+    GetLocationResult:
+      title: GetLocationResult
+      type: object
+      properties:
+        att_type:
+          type: string
+        CreationDate:
+          type: string
+        SalesTaxInsideCityLimits:
+          type: object
+        LocationInformation:
+          $ref: "#/components/schemas/LocationInformation"
+        Latitude:
+          type: object
+        StatusFlag:
+          type: boolean
+        ShortDescription:
+          type: object
+        ClliCode:
+          type: object
+        DoNotValidateFlag:
+          type: object
+        FaLocationId:
+          type: object
+        CreatedByModule:
+          type: string
+        Distance:
+          type: object
+        LastUpdatedBy:
+          type: string
+        CreatedBy:
+          type: string
+        RequestId:
+          type: number
+        Position:
+          type: object
+        ValidationStatusCode:
+          type: object
+        AddrElementAttribute5:
+          type: object
+        LocationProfile:
+          $ref: "#/components/schemas/LocationProfile"
+        City:
+          type: string
+        AddrElementAttribute1:
+          type: object
+        AddrElementAttribute2:
+          type: object
+        Longitude:
+          type: object
+        Province:
+          type: object
+        AddrElementAttribute3:
+          type: object
+        AddrElementAttribute4:
+          type: object
+        ValidatedFlag:
+          type: boolean
+        AddressEffectiveDate:
+          type: object
+        PostalPlus4Code:
+          type: object
+        LocationDirections:
+          type: object
+        State:
+          type: object
+        Country:
+          type: string
+        OrigSystemReference:
+          type: number
+        LastUpdateLogin:
+          type: string
+        Building:
+          type: object
+        FloorNumber:
+          type: object
+        TimezoneCode:
+          type: object
+        Description:
+          type: object
+        SalesTaxGeocode:
+          type: object
+        PostalCode:
+          type: object
+        County:
+          type: object
+        OrigSystem:
+          type: object
+        Language:
+          type: object
+        ObjectVersionNumber:
+          type: number
+        HouseType:
+          type: object
+        Address4:
+          type: object
+        AddressLinesPhonetic:
+          type: object
+        AddressStyle:
+          type: object
+        DateValidated:
+          type: object
+        Comments:
+          type: object
+        OriginalSystemReference:
+          $ref: "#/components/schemas/OriginalSystemReference"
+        LocationId:
+          type: number
+        Address2:
+          type: string
+        Address3:
+          type: object
+        AddressExpirationDate:
+          type: object
+        InternalFlag:
+          type: boolean
+        Address1:
+          type: string
+        GeometryStatusCode:
+          type: object
+        LastUpdateDate:
+          type: string
+        EffectiveDate:
+          type: string
+    LocationInformation:
+      title: LocationInformation
+      type: object
+      properties:
+        __FLEX_Context:
+          type: object
+        __FLEX_Context_DisplayValue:
+          type: object
+        _FLEX_NumOfSegments:
+          type: number
+        LocationId:
+          type: number
+    LocationProfile:
+      title: LocationProfile
+      type: object
+      properties:
+        LocationProfileId:
+          type: number
+        LocationId:
+          type: number
+        EffectiveStartDate:
+          type: string
+        EffectiveEndDate:
+          type: string
+        ValidationSstFlag:
+          type: boolean
+        ValidationStatusCode:
+          type: object
+        DateValidated:
+          type: object
+        Address1:
+          type: string
+        Address2:
+          type: string
+        Address3:
+          type: object
+        Address4:
+          type: object
+        City:
+          type: string
+        PostalCode:
+          type: object
+        County:
+          type: object
+        Country:
+          type: string
+        ObjectVersionNumber:
+          type: number
+        LastUpdateDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        LastUpdateLogin:
+          type: string
+        CreationDate:
+          type: string
+        CreatedBy:
+          type: string
+        RequestId:
+          type: number
+        State:
+          type: object
+        Province:
+          type: object
+        EffectiveSequence:
+          type: number
+        EffectiveLatestChange:
+          type: string
+        AddrElementAttribute1:
+          type: object
+        AddrElementAttribute2:
+          type: object
+        AddrElementAttribute3:
+          type: object
+        AddrElementAttribute4:
+          type: object
+        AddrElementAttribute5:
+          type: object
+        Building:
+          type: object
+        FloorNumber:
+          type: object
+    OriginalSystemReference:
+      title: OriginalSystemReference
+      type: object
+      properties:
+        OrigSystemReferenceId:
+          type: number
+        OrigSystem:
+          type: string
+        OrigSystemReference:
+          type: number
+        OwnerTableName:
+          type: string
+        OwnerTableId:
+          type: number
+        Status:
+          type: string
+        ReasonCode:
+          type: object
+        OldOrigSystemReference:
+          type: object
+        StartDateActive:
+          type: string
+        EndDateActive:
+          type: string
+        CreatedBy:
+          type: string
+        CreationDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        LastUpdateDate:
+          type: string
+        LastUpdateLogin:
+          type: string
+        ObjectVersionNumber:
+          type: number
+        CreatedByModule:
+          type: string
+        PartyId:
+          type: object
+        RequestId:
+          type: object
+        SourceSystemRefInformation:
+          $ref: "#/components/schemas/SourceSystemRefInformation"
+    SourceSystemRefInformation:
+      title: SourceSystemRefInformation
+      properties:
+        __FLEX_Context:
+          type: object
+        __FLEX_Context_DisplayValue:
+          type: object
+        _FLEX_NumOfSegments:
+          type: number
+        OrigSystemRefId:
+          type: number
+      type: object
+    UpdateLocationValue:
+      properties:
+        LocationId:
+          type: number
+        LastUpdateDate:
+          type: string
+        LastUpdatedBy:
+          type: string
+        CreationDate:
+          type: string
+        CreatedBy:
+          type: string
+        LastUpdateLogin:
+          type: string
+        RequestId:
+          type: object
+        OrigSystem:
+          type: object
+        OrigSystemReference:
+          type: number
+        Country:
+          type: string
+        Address1:
+          type: string
+        Address2:
+          type: string
+        Address3:
+          type: string
+        Address4:
+          type: string
+        City:
+          type: string
+        PostalCode:
+          type: number
+        State:
+          type: string
+        Province:
+          type: string
+        County:
+          type: object
+        AddressStyle:
+          type: object
+        ValidatedFlag:
+          type: boolean
+        AddressLinesPhonetic:
+          type: object
+        PostalPlus4Code:
+          type: object
+        Position:
+          type: object
+        LocationDirections:
+          type: object
+        AddressEffectiveDate:
+          type: object
+        AddressExpirationDate:
+          type: object
+        ClliCode:
+          type: object
+        Language:
+          type: object
+        ShortDescription:
+          type: object
+        Description:
+          type: object
+        SalesTaxGeocode:
+          type: object
+        SalesTaxInsideCityLimits:
+          type: number
+        FaLocationId:
+          type: object
+        ObjectVersionNumber:
+          type: number
+        CreatedByModule:
+          type: string
+        GeometryStatusCode:
+          type: string
+        ValidationStatusCode:
+          type: object
+        DateValidated:
+          type: object
+        DoNotValidateFlag:
+          type: object
+        Comments:
+          type: object
+        HouseType:
+          type: object
+        EffectiveDate:
+          type: string
+        AddrElementAttribute1:
+          type: object
+        AddrElementAttribute2:
+          type: object
+        AddrElementAttribute3:
+          type: object
+        AddrElementAttribute4:
+          type: object
+        AddrElementAttribute5:
+          type: object
+        Building:
+          type: object
+        FloorNumber:
+          type: object
+        StatusFlag:
+          type: boolean
+        InternalFlag:
+          type: boolean
+        TimezoneCode:
+          type: object
+        Latitude:
+          type: object
+        Longitude:
+          type: object
+        Distance:
+          type: object
